@@ -1,4 +1,3 @@
-
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -30,12 +29,9 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
 
   const evaluateExpression = (expression: string, row: any) => {
     try {
-      // Replace field references with proper string representation of field values
       let processedExpression = expression.replace(/\[(\w+)\]/g, (substring, field) => {
-        // Check if the field exists in the row data
         if (!(field in row)) {
           console.warn(`Field [${field}] not found in row data`);
-          // Return 0 for undefined fields in numeric operations
           return '0';
         }
         
@@ -44,13 +40,11 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
           return '0';
         }
         
-        // Keep numeric values as is, quote strings
         return typeof value === 'number' ? String(value) : `"${value}"`;
       });
 
       console.log('Processed expression:', processedExpression);
 
-      // Create a safe evaluation context
       const evalFn = new Function('row', `
         try {
           return ${processedExpression};
@@ -69,7 +63,6 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     }
   };
 
-  // Function to create column definitions from calculatedColumns
   const createCalculatedColumnDefs = useCallback((calculatedCols) => {
     return calculatedCols.map(col => ({
       field: col.columnId,
@@ -111,7 +104,6 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
   }, []);
 
   useEffect(() => {
-    // Combine original column defs with calculated columns
     const calculatedColDefs = createCalculatedColumnDefs(calculatedColumns);
     setColumnDefs([...initialColumnDefs, ...calculatedColDefs]);
   }, [initialColumnDefs, calculatedColumns, createCalculatedColumnDefs]);
@@ -120,7 +112,23 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     setGridApi(params.api);
     params.api.sizeColumnsToFit();
     
-    // Call external handler if provided
+    const gridElement = document.querySelector('.ag-theme-alpine');
+    if (gridElement) {
+      const styleElement = document.createElement('style');
+      styleElement.textContent = `
+        .custom-header {
+          background-color: #f8f9fa;
+        }
+        .custom-cell {
+          transition: background-color 0.3s;
+        }
+        .custom-cell:hover {
+          background-color: rgba(0, 0, 0, 0.1) !important;
+        }
+      `;
+      document.head.appendChild(styleElement);
+    }
+    
     if (externalGridReadyHandler) {
       externalGridReadyHandler(params);
     }

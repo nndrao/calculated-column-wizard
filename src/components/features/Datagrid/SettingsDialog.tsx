@@ -45,7 +45,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 }) => {
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [showWizard, setShowWizard] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('calculated-columns');
+  const [selectedTab, setSelectedTab] = useState('column-settings');  // Default to column-settings tab
   const {
     dialogPosition,
     isDragging,
@@ -98,16 +98,23 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
         >
           <div className="border-b bg-white flex-shrink-0">
             <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
-              <TabsTrigger value="calculated-columns">
-                Calculated Columns
-              </TabsTrigger>
               <TabsTrigger value="column-settings">
                 Column Settings
+              </TabsTrigger>
+              <TabsTrigger value="calculated-columns">
+                Calculated Columns
               </TabsTrigger>
             </TabsList>
           </div>
           
           <div className="flex-1 overflow-hidden">
+            <TabsContent value="column-settings" className="h-full m-0 overflow-auto">
+              <ColumnSettingsTab 
+                columnDefs={columnDefs} 
+                onUpdateColumnDef={onUpdateColumnDef} 
+              />
+            </TabsContent>
+            
             <TabsContent value="calculated-columns" className="h-full m-0 overflow-auto">
               <CalculatedColumnsTabContent
                 showWizard={showWizard}
@@ -122,13 +129,6 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                 onSaveColumn={handleSaveColumn}
                 handleBack={handleBack}
                 availableFields={availableFields}
-              />
-            </TabsContent>
-            
-            <TabsContent value="column-settings" className="h-full m-0 overflow-hidden">
-              <ColumnSettingsTab 
-                columnDefs={columnDefs} 
-                onUpdateColumnDef={onUpdateColumnDef} 
               />
             </TabsContent>
           </div>

@@ -1,4 +1,3 @@
-
 import { ColDef } from 'ag-grid-community';
 import { ColumnSettings, StyleSettings } from './types';
 
@@ -23,23 +22,22 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
   };
 
-  const cellStyle = {
-    fontWeight: settings.cellStyle.fontWeight,
-    fontStyle: settings.cellStyle.fontStyle,
-    textDecoration: settings.cellStyle.textDecoration,
-    textAlign: settings.cellStyle.textAlign,
-    backgroundColor: settings.cellStyle.backgroundColor,
-    color: settings.cellStyle.color,
-    borderTop: `${settings.cellStyle.border.top.width}px ${settings.cellStyle.border.top.style} ${settings.cellStyle.border.top.color}`,
-    borderRight: `${settings.cellStyle.border.right.width}px ${settings.cellStyle.border.right.style} ${settings.cellStyle.border.right.color}`,
-    borderBottom: `${settings.cellStyle.border.bottom.width}px ${settings.cellStyle.border.bottom.style} ${settings.cellStyle.border.bottom.color}`,
-    borderLeft: `${settings.cellStyle.border.left.width}px ${settings.cellStyle.border.left.style} ${settings.cellStyle.border.left.color}`
+  colDefUpdate.cellStyle = (params: any) => {
+    return {
+      fontWeight: settings.cellStyle.fontWeight,
+      fontStyle: settings.cellStyle.fontStyle,
+      textDecoration: settings.cellStyle.textDecoration,
+      textAlign: settings.cellStyle.textAlign,
+      backgroundColor: settings.cellStyle.backgroundColor,
+      color: settings.cellStyle.color,
+      borderTop: `${settings.cellStyle.border.top.width}px ${settings.cellStyle.border.top.style} ${settings.cellStyle.border.top.color}`,
+      borderRight: `${settings.cellStyle.border.right.width}px ${settings.cellStyle.border.right.style} ${settings.cellStyle.border.right.color}`,
+      borderBottom: `${settings.cellStyle.border.bottom.width}px ${settings.cellStyle.border.bottom.style} ${settings.cellStyle.border.bottom.color}`,
+      borderLeft: `${settings.cellStyle.border.left.width}px ${settings.cellStyle.border.left.style} ${settings.cellStyle.border.left.color}`
+    };
   };
 
   colDefUpdate.headerClass = 'custom-header';
-  colDefUpdate.cellClass = 'custom-cell';
-  
-  colDefUpdate.cellStyle = cellStyle;
   
   colDefUpdate.headerComponentParams = {
     template: 

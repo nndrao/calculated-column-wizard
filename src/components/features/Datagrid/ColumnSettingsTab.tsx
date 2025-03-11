@@ -11,6 +11,7 @@ import EmptyState from './column-settings/EmptyState';
 import GeneralTab from './column-settings/GeneralTab';
 import StyleTab from './column-settings/StyleTab';
 import FormatTab from './column-settings/FormatTab';
+import { toast } from 'sonner';
 
 const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({ 
   columnDefs, 
@@ -46,6 +47,7 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
     
     const colDefUpdate = buildColumnDef(settings, selectedField);
     onUpdateColumnDef(selectedField, colDefUpdate);
+    toast.success(`Column "${selectedField}" updated successfully`);
   };
 
   const updateStyleSetting = (
