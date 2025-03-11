@@ -22,24 +22,24 @@ const ExpressionTab: React.FC<ExpressionTabProps> = ({
   onExpressionChange
 }) => {
   return (
-    <div className="flex flex-col h-full max-h-full">
-      <div className="flex-none mb-4">
+    <div className="flex flex-col space-y-4 h-full max-h-full">
+      <div className="flex-none">
         <h3 className="text-base font-semibold mb-1">Define Expression</h3>
         <p className="text-sm text-muted-foreground">
           Create the expression that will calculate the column value in AG-Grid
         </p>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-6 flex-1 overflow-auto">
-        <div className="flex flex-col max-h-full">
+      <div className="grid md:grid-cols-2 gap-6 min-h-0 flex-1 overflow-hidden">
+        <div className="overflow-hidden flex flex-col min-h-0">
           <ExpressionBuilder 
             expression={expression}
             onChange={onExpressionChange}
-            className="flex-1 h-full"
+            className="h-full flex-1"
           />
         </div>
         
-        <div className="border rounded-md bg-gray-50 p-4 overflow-auto h-fit max-h-full">
+        <div className="border rounded-md bg-gray-50 p-4 overflow-auto h-auto">
           <h4 className="text-sm font-medium mb-3 flex items-center">
             <FunctionIcon className="w-4 h-4 mr-2" />
             Expression Examples

@@ -32,15 +32,15 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
   };
 
   return (
-    <div className={cn('flex flex-col border rounded-md bg-white h-full overflow-hidden', className)}>
+    <div className={cn('border rounded-md bg-white flex flex-col h-full overflow-hidden', className)}>
       <div className="flex-none border-b px-4 py-3 bg-gray-50 rounded-t-md">
         <h3 className="text-sm font-medium">Expression Builder</h3>
       </div>
       
-      <div className="flex flex-1 min-h-0">
-        <div className="w-64 border-r flex-shrink-0">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
+        <div className="w-64 border-r flex-none">
           <Tabs defaultValue="functions" className="h-full flex flex-col">
-            <TabsList className="grid grid-cols-2 mx-2 mt-2 mb-0 flex-shrink-0">
+            <TabsList className="grid grid-cols-2 mx-2 mt-2 mb-0 flex-none">
               <TabsTrigger value="functions" className="text-xs">Functions</TabsTrigger>
               <TabsTrigger value="fields" className="text-xs">Fields</TabsTrigger>
             </TabsList>
@@ -57,7 +57,7 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
           </Tabs>
         </div>
         
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
           <div className="flex-none border-b p-2 flex items-center justify-between bg-gray-50">
             <div className="flex items-center">
               <Calculator size={16} className="mr-2 text-blue-600" />
