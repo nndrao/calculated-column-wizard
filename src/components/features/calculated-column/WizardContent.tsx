@@ -43,7 +43,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
       <TabsContent 
         value="type" 
         className="flex-1 data-[state=active]:flex flex-col h-full data-[state=inactive]:hidden m-0 p-0"
-        forceMount={activeTab === "type"}
+        forceMount={activeTab === "type" ? true : undefined}
       >
         <div className="p-6 pb-3 bg-white border-b flex-shrink-0">
           <h3 className="text-base font-semibold mb-1">Specify Calculated Column details</h3>
@@ -67,7 +67,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
       <TabsContent 
         value="expression" 
         className="flex-1 data-[state=active]:flex flex-col h-full data-[state=inactive]:hidden m-0 p-0"
-        forceMount={activeTab === "expression"}
+        forceMount={activeTab === "expression" ? true : undefined}
       >
         <div className="p-6 pb-3 bg-white border-b flex-shrink-0">
           <h3 className="text-base font-semibold mb-1">Define Expression</h3>
@@ -90,7 +90,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
       <TabsContent 
         value="settings" 
         className="flex-1 data-[state=active]:flex flex-col h-full data-[state=inactive]:hidden m-0 p-0"
-        forceMount={activeTab === "settings"}
+        forceMount={activeTab === "settings" ? true : undefined}
       >
         <div className="p-6 pb-3 bg-white border-b flex-shrink-0">
           <h3 className="text-base font-semibold mb-1">Column Settings</h3>
@@ -112,7 +112,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
       <TabsContent 
         value="summary" 
         className="flex-1 data-[state=active]:flex flex-col h-full data-[state=inactive]:hidden m-0 p-0"
-        forceMount={activeTab === "summary"}
+        forceMount={activeTab === "summary" ? true : undefined}
       >
         <div className="p-6 pb-3 bg-white border-b flex-shrink-0">
           <h3 className="text-base font-semibold mb-1">Summary</h3>
