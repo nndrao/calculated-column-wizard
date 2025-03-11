@@ -3,8 +3,9 @@ import React, { useState } from 'react';
 import Toolbar from './Toolbar';
 import AgGridWrapper from '../AgGridWrapper';
 import SettingsDialog from './SettingsDialog';
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ColumnSettingsType } from '../ColumnSettings';
+import { toast } from 'sonner';
 
 interface DatagridProps {
   columnDefs: ColDef[];
@@ -25,7 +26,7 @@ interface DatagridProps {
 }
 
 const Datagrid: React.FC<DatagridProps> = ({
-  columnDefs,
+  columnDefs: initialColumnDefs,
   rowData,
   calculatedColumns,
   onSaveColumn,
@@ -33,6 +34,8 @@ const Datagrid: React.FC<DatagridProps> = ({
 }) => {
   const [showSettings, setShowSettings] = useState(false);
   const [availableFields, setAvailableFields] = useState<{name: string, type: string}[]>([]);
+  const [gridApi, setGridApi] = useState<GridApi | null>(null);
+  const [columnDefs, setColumnDefs] = useState<ColDef[]>(initialColumnDefs);
 
   const handleGridReady = (params: GridReadyEvent) => {
     // Extract column information from the grid
@@ -42,6 +45,7 @@ const Datagrid: React.FC<DatagridProps> = ({
     })).filter(field => field.name);
     
     setAvailableFields(fields);
+    setGridApi(params.api);
   };
   
   // Helper function to determine column type
@@ -57,6 +61,26 @@ const Datagrid: React.FC<DatagridProps> = ({
     } else {
       return 'string';
     }
+  };
+
+  // Handle column definition updates from the settings dialog
+  const handleUpdateColumnDef = (field: string, colDef: Partial<ColDef>) => {
+    const updatedColumnDefs = columnDefs.map(col => {
+      if (col.field === field) {
+        return { ...col, ...colDef };
+      }
+      return col;
+    });
+    
+    setColumnDefs(updatedColumnDefs);
+    
+    // Refresh the grid to apply changes
+    if (gridApi) {
+      gridApi.setColumnDefs(updatedColumnDefs);
+      gridApi.refreshCells({ force: true });
+    }
+    
+    toast.success(`Column "${field}" updated successfully`);
   };
 
   return (
@@ -77,6 +101,8 @@ const Datagrid: React.FC<DatagridProps> = ({
         onSaveColumn={onSaveColumn}
         onDeleteColumn={onDeleteColumn}
         availableFields={availableFields}
+        columnDefs={columnDefs}
+        onUpdateColumnDef={handleUpdateColumnDef}
       />
     </div>
   );
