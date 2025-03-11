@@ -5,18 +5,9 @@ import {
   TypeIcon, 
   PencilIcon, 
   SettingsIcon, 
-  FileTextIcon, 
-  InfoIcon,
-  Code as FunctionIcon, // Use Code as FunctionIcon
-  Table
+  FileTextIcon 
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from '@/components/ui/label';
-import ExpressionBuilder from './ExpressionBuilder';
-import ColumnSettings, { ColumnSettingsType } from './ColumnSettings';
-import WizardSummary from './WizardSummary';
 import { 
   Card,
   CardContent,
@@ -26,6 +17,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
+import { ColumnSettingsType } from './ColumnSettings';
+import { DEFAULT_SETTINGS } from './calculated-column/constants';
+import TypeTab from './calculated-column/TypeTab';
+import ExpressionTab from './calculated-column/ExpressionTab';
+import SettingsTab from './calculated-column/SettingsTab';
+import SummaryTab from './calculated-column/SummaryTab';
+import WizardFooter from './calculated-column/WizardFooter';
 
 interface CalculatedColumnWizardProps {
   onSave?: (data: {
@@ -43,35 +41,6 @@ interface CalculatedColumnWizardProps {
   };
   className?: string;
 }
-
-const DEFAULT_SETTINGS: ColumnSettingsType = {
-  dataType: 'string',
-  width: 150,
-  editable: false,
-  filterable: true,
-  sortable: true,
-  resizable: true,
-  format: 'default',
-  precision: 2,
-  header: {
-    text: '',
-    tooltip: ''
-  },
-  menu: {
-    enabled: true,
-    items: []
-  }
-};
-
-// Example of column expressions for AG-Grid
-const EXPRESSION_EXAMPLES = [
-  { label: 'Sum', example: 'row.value1 + row.value2' },
-  { label: 'Multiply', example: 'row.price * row.quantity' },
-  { label: 'Concatenate', example: '`${row.firstName} ${row.lastName}`' },
-  { label: 'Conditional', example: 'row.age > 30 ? "Senior" : "Junior"' },
-  { label: 'Format Currency', example: 'row.salary' },
-  { label: 'Calculate Percentage', example: '(row.value / row.total) * 100' }
-];
 
 const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
   onSave,
@@ -243,113 +212,31 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               value="type" 
               className="mt-0 h-full space-y-6 animate-fade-in data-[state=inactive]:animate-fade-out"
             >
-              <div className="mb-8">
-                <h3 className="text-base font-semibold mb-1">Specify Calculated Column details</h3>
-                <p className="text-sm text-muted-foreground">
-                  Define the basic information for your AG-Grid calculated column
-                </p>
-              </div>
-              
-              <div className="grid gap-6 max-w-lg">
-                <div className="space-y-2">
-                  <Label htmlFor="columnId">Column ID</Label>
-                  <Input
-                    id="columnId"
-                    value={columnId}
-                    onChange={(e) => setColumnId(e.target.value)}
-                    placeholder="Enter unique column identifier"
-                    className="input-focus-animation"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    A unique identifier for the column (e.g., "calculatedPrice")
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="columnName">Column Name</Label>
-                  <Input
-                    id="columnName"
-                    value={columnName}
-                    onChange={(e) => setColumnName(e.target.value)}
-                    placeholder="Enter display name for column"
-                    className="input-focus-animation"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    The display name shown in the AG-Grid column header (e.g., "Calculated Price")
-                  </p>
-                </div>
-                
-                <div className="flex items-start mt-4 bg-blue-50 rounded-md p-3 border border-blue-200">
-                  <InfoIcon className="h-5 w-5 text-blue-500 mr-3 mt-0.5" />
-                  <div className="text-sm text-blue-700">
-                    The Column ID must be unique and will be used in the AG-Grid API. The Column Name is what users will see in the grid header.
-                  </div>
-                </div>
-              </div>
+              <TypeTab
+                columnId={columnId}
+                columnName={columnName}
+                onColumnIdChange={setColumnId}
+                onColumnNameChange={setColumnName}
+              />
             </TabsContent>
             
             <TabsContent 
               value="expression" 
               className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
             >
-              <div className="mb-8">
-                <h3 className="text-base font-semibold mb-1">Define Expression</h3>
-                <p className="text-sm text-muted-foreground">
-                  Create the expression that will calculate the column value in AG-Grid
-                </p>
-              </div>
-              
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <ExpressionBuilder 
-                    expression={expression}
-                    onChange={setExpression}
-                  />
-                </div>
-                
-                <div className="border rounded-md bg-gray-50 p-4">
-                  <h4 className="text-sm font-medium mb-3 flex items-center">
-                    <FunctionIcon className="w-4 h-4 mr-2" />
-                    Expression Examples
-                  </h4>
-                  
-                  <div className="space-y-3">
-                    {EXPRESSION_EXAMPLES.map((example, index) => (
-                      <div 
-                        key={index} 
-                        className="bg-white border rounded-md p-3 cursor-pointer hover:border-blue-300 transition-colors"
-                        onClick={() => setExpression(example.example)}
-                      >
-                        <div className="font-medium text-sm">{example.label}</div>
-                        <code className="text-xs font-mono block mt-1 text-gray-600">
-                          {example.example}
-                        </code>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-4 bg-blue-50 border border-blue-200 rounded-md p-3">
-                    <p className="text-xs text-blue-700">
-                      In AG-Grid expressions, use <code className="bg-blue-100 px-1 py-0.5 rounded">row.fieldName</code> to access data from other columns. The expression will be evaluated for each row.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <ExpressionTab
+                expression={expression}
+                onExpressionChange={setExpression}
+              />
             </TabsContent>
             
             <TabsContent 
               value="settings" 
               className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
             >
-              <div className="mb-8">
-                <h3 className="text-base font-semibold mb-1">Column Settings</h3>
-                <p className="text-sm text-muted-foreground">
-                  Configure how the calculated column will behave and display in AG-Grid
-                </p>
-              </div>
-              
-              <ColumnSettings 
+              <SettingsTab
                 settings={settings}
-                onChange={setSettings}
+                onSettingsChange={setSettings}
               />
             </TabsContent>
             
@@ -357,14 +244,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               value="summary" 
               className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
             >
-              <div className="mb-8">
-                <h3 className="text-base font-semibold mb-1">Summary</h3>
-                <p className="text-sm text-muted-foreground">
-                  Review your AG-Grid calculated column configuration
-                </p>
-              </div>
-              
-              <WizardSummary 
+              <SummaryTab
                 columnId={columnId}
                 columnName={columnName}
                 expression={expression}
@@ -373,42 +253,14 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
             </TabsContent>
           </CardContent>
           
-          <CardFooter className="flex justify-between border-t p-4 bg-gray-50">
-            <div>
-              {activeTab !== 'type' && (
-                <Button 
-                  variant="outline" 
-                  onClick={handleBack}
-                  className="shadow-sm transition-all duration-200"
-                >
-                  Back
-                </Button>
-              )}
-            </div>
-            <div className="flex space-x-2">
-              <Button 
-                variant="outline" 
-                onClick={onCancel}
-                className="shadow-sm transition-all duration-200"
-              >
-                Cancel
-              </Button>
-              {activeTab !== 'summary' ? (
-                <Button 
-                  onClick={handleNext}
-                  className="shadow-sm transition-all duration-200 hover:translate-y-[-1px] hover:shadow-md"
-                >
-                  Next
-                </Button>
-              ) : (
-                <Button 
-                  onClick={handleSave}
-                  className="shadow-sm transition-all duration-200 hover:translate-y-[-1px] hover:shadow-md"
-                >
-                  Save Column
-                </Button>
-              )}
-            </div>
+          <CardFooter className="p-0">
+            <WizardFooter
+              activeTab={activeTab}
+              onBack={handleBack}
+              onNext={handleNext}
+              onCancel={onCancel || (() => {})}
+              onSave={handleSave}
+            />
           </CardFooter>
         </Tabs>
       </Card>
