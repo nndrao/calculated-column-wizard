@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ColDef } from 'ag-grid-community';
@@ -107,7 +108,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <TabsContent value="calculated-columns" className="h-full m-0">
+            <TabsContent value="calculated-columns" className="h-full m-0 overflow-auto">
               <CalculatedColumnsTabContent
                 showWizard={showWizard}
                 calculatedColumns={calculatedColumns}
@@ -124,7 +125,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               />
             </TabsContent>
             
-            <TabsContent value="column-settings" className="h-full m-0">
+            <TabsContent value="column-settings" className="h-full m-0 overflow-hidden">
               <ColumnSettingsTab 
                 columnDefs={columnDefs} 
                 onUpdateColumnDef={onUpdateColumnDef} 
