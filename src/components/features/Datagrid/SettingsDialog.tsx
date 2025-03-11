@@ -110,20 +110,22 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <CalculatedColumnsTabContent
-              showWizard={showWizard}
-              calculatedColumns={calculatedColumns}
-              selectedColumnId={selectedColumnId}
-              onSelectColumn={(columnId) => {
-                setSelectedColumnId(columnId);
-                setShowWizard(true);
-              }}
-              onNewColumn={handleNewColumn}
-              onDeleteColumn={onDeleteColumn}
-              onSaveColumn={handleSaveColumn}
-              handleBack={handleBack}
-              availableFields={availableFields}
-            />
+            <TabsContent value="calculated-columns" className="h-full">
+              <CalculatedColumnsTabContent
+                showWizard={showWizard}
+                calculatedColumns={calculatedColumns}
+                selectedColumnId={selectedColumnId}
+                onSelectColumn={(columnId) => {
+                  setSelectedColumnId(columnId);
+                  setShowWizard(true);
+                }}
+                onNewColumn={handleNewColumn}
+                onDeleteColumn={onDeleteColumn}
+                onSaveColumn={handleSaveColumn}
+                handleBack={handleBack}
+                availableFields={availableFields}
+              />
+            </TabsContent>
             
             <TabsContent value="column-settings" className="h-full">
               <ColumnSettingsTab 
