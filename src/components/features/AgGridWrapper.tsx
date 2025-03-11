@@ -29,13 +29,23 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     try {
       // Replace field references with proper string representation of field values
       let processedExpression = expression.replace(/\[(\w+)\]/g, (substring, field) => {
+        // Check if the field exists in the row data
+        if (!(field in row)) {
+          console.warn(`Field [${field}] not found in row data`);
+          // Return 0 for undefined fields in numeric operations
+          return '0';
+        }
+        
         const value = row[field];
         if (value === undefined || value === null) {
-          return 'null';
+          return '0';
         }
+        
         // Keep numeric values as is, quote strings
         return typeof value === 'number' ? String(value) : `"${value}"`;
       });
+
+      console.log('Processed expression:', processedExpression);
 
       // Create a safe evaluation context
       const evalFn = new Function('row', `
@@ -48,6 +58,7 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
       `);
 
       const result = evalFn(row);
+      console.log('Evaluation result:', result);
       return result;
     } catch (error) {
       console.error("Expression processing error:", error);
