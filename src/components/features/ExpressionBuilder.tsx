@@ -16,12 +16,17 @@ export interface ExpressionBuilderProps {
   expression: string;
   onChange: (expression: string) => void;
   className?: string;
+  availableFields?: Array<{
+    name: string;
+    type: string;
+  }>;
 }
 
 const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
   expression,
   onChange,
-  className
+  className,
+  availableFields = []
 }) => {
   const handleInsertFunction = (syntax: string) => {
     onChange(`${expression}${syntax}`);
@@ -52,7 +57,10 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
             </TabsContent>
             
             <TabsContent value="fields" className="flex-1 overflow-hidden p-0 mt-0 h-full">
-              <FieldSelector onInsertField={handleInsertField} />
+              <FieldSelector 
+                onInsertField={handleInsertField} 
+                availableFields={availableFields}
+              />
             </TabsContent>
           </Tabs>
         </div>

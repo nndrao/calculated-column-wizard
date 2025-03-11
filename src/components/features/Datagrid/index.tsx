@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Toolbar from './Toolbar';
 import AgGridWrapper from '../AgGridWrapper';
 import SettingsDialog from './SettingsDialog';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ColumnSettingsType } from '../ColumnSettings';
 
 interface DatagridProps {
@@ -32,6 +32,32 @@ const Datagrid: React.FC<DatagridProps> = ({
   onDeleteColumn,
 }) => {
   const [showSettings, setShowSettings] = useState(false);
+  const [availableFields, setAvailableFields] = useState<{name: string, type: string}[]>([]);
+
+  const handleGridReady = (params: GridReadyEvent) => {
+    // Extract column information from the grid
+    const fields = columnDefs.map(col => ({
+      name: col.field || '',
+      type: getColumnType(col)
+    })).filter(field => field.name);
+    
+    setAvailableFields(fields);
+  };
+  
+  // Helper function to determine column type
+  const getColumnType = (colDef: ColDef): string => {
+    if (colDef.type === 'numericColumn' || 
+        colDef.type === 'numberColumn' || 
+        colDef.field === 'age' || 
+        colDef.field === 'salary' ||
+        colDef.field === 'id') {
+      return 'number';
+    } else if (colDef.type === 'dateColumn') {
+      return 'date';
+    } else {
+      return 'string';
+    }
+  };
 
   return (
     <div className="h-full flex flex-col bg-white rounded-md border shadow-sm overflow-hidden">
@@ -41,6 +67,7 @@ const Datagrid: React.FC<DatagridProps> = ({
           columnDefs={columnDefs}
           rowData={rowData}
           calculatedColumns={calculatedColumns}
+          onGridReady={handleGridReady}
         />
       </div>
       <SettingsDialog
@@ -49,6 +76,7 @@ const Datagrid: React.FC<DatagridProps> = ({
         calculatedColumns={calculatedColumns}
         onSaveColumn={onSaveColumn}
         onDeleteColumn={onDeleteColumn}
+        availableFields={availableFields}
       />
     </div>
   );

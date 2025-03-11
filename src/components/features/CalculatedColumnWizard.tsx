@@ -30,13 +30,18 @@ interface CalculatedColumnWizardProps {
     settings: ColumnSettingsType;
   };
   className?: string;
+  availableFields?: Array<{
+    name: string;
+    type: string;
+  }>;
 }
 
 const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
   onSave,
   onCancel,
   initialData,
-  className
+  className,
+  availableFields = []
 }) => {
   const { toast } = useToast();
   const [columnId, setColumnId] = useState(initialData?.columnId || '');
@@ -115,6 +120,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               onColumnNameChange={setColumnName}
               onExpressionChange={setExpression}
               onSettingsChange={setSettings}
+              availableFields={availableFields}
             />
             
             <WizardFooter

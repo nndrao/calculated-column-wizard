@@ -30,6 +30,10 @@ interface SettingsDialogProps {
     settings: ColumnSettingsType;
   }) => void;
   onDeleteColumn: (columnId: string) => void;
+  availableFields: Array<{
+    name: string;
+    type: string;
+  }>;
 }
 
 const SettingsDialog: React.FC<SettingsDialogProps> = ({
@@ -38,6 +42,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   calculatedColumns,
   onSaveColumn,
   onDeleteColumn,
+  availableFields,
 }) => {
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [showWizard, setShowWizard] = useState(false);
@@ -154,6 +159,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       onSave={handleSaveColumn}
                       onCancel={handleBack}
                       initialData={selectedColumn}
+                      availableFields={availableFields}
                     />
                   </div>
                 </div>

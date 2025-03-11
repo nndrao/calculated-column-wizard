@@ -1,3 +1,4 @@
+
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -14,12 +15,14 @@ interface AgGridWrapperProps {
     expression: string;
     settings: ColumnSettingsType;
   }[];
+  onGridReady?: (params: GridReadyEvent) => void;
 }
 
 const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
   columnDefs: initialColumnDefs,
   rowData,
-  calculatedColumns = []
+  calculatedColumns = [],
+  onGridReady: externalGridReadyHandler
 }) => {
   const gridRef = useRef<AgGridReact>(null);
   const [columnDefs, setColumnDefs] = useState<ColDef[]>(initialColumnDefs);
@@ -116,6 +119,11 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
   const onGridReady = (params: GridReadyEvent) => {
     setGridApi(params.api);
     params.api.sizeColumnsToFit();
+    
+    // Call external handler if provided
+    if (externalGridReadyHandler) {
+      externalGridReadyHandler(params);
+    }
   };
 
   return (

@@ -6,6 +6,10 @@ import ExpressionBuilder from '../ExpressionBuilder';
 interface ExpressionTabProps {
   expression: string;
   onExpressionChange: (value: string) => void;
+  availableFields?: Array<{
+    name: string;
+    type: string;
+  }>;
 }
 
 const EXPRESSION_EXAMPLES = [
@@ -19,8 +23,16 @@ const EXPRESSION_EXAMPLES = [
 
 const ExpressionTab: React.FC<ExpressionTabProps> = ({
   expression,
-  onExpressionChange
+  onExpressionChange,
+  availableFields = []
 }) => {
+  const getFieldNames = () => {
+    if (availableFields && availableFields.length > 0) {
+      return availableFields.map(field => field.name).join(', ');
+    }
+    return 'id, firstName, lastName, age, salary, department';
+  };
+
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <div>
@@ -28,6 +40,7 @@ const ExpressionTab: React.FC<ExpressionTabProps> = ({
           expression={expression}
           onChange={onExpressionChange}
           className="h-[450px]"
+          availableFields={availableFields}
         />
       </div>
       
@@ -54,7 +67,7 @@ const ExpressionTab: React.FC<ExpressionTabProps> = ({
         
         <div className="mt-4 bg-blue-50 border border-blue-200 rounded-md p-3">
           <p className="text-xs text-blue-700">
-            Use square brackets to reference column fields like <code className="bg-blue-100 px-1 py-0.5 rounded">[salary]</code>. Available fields: id, firstName, lastName, age, salary, department.
+            Use square brackets to reference column fields like <code className="bg-blue-100 px-1 py-0.5 rounded">[salary]</code>. Available fields: {getFieldNames()}.
           </p>
         </div>
       </div>

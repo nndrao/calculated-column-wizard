@@ -18,6 +18,10 @@ interface WizardContentProps {
   onColumnNameChange: (value: string) => void;
   onExpressionChange: (value: string) => void;
   onSettingsChange: (settings: ColumnSettingsType) => void;
+  availableFields?: Array<{
+    name: string;
+    type: string;
+  }>;
 }
 
 const WizardContent: React.FC<WizardContentProps> = ({
@@ -29,7 +33,8 @@ const WizardContent: React.FC<WizardContentProps> = ({
   onColumnIdChange,
   onColumnNameChange,
   onExpressionChange,
-  onSettingsChange
+  onSettingsChange,
+  availableFields = []
 }) => {
   return (
     <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
@@ -72,6 +77,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
             <ExpressionTab
               expression={expression}
               onExpressionChange={onExpressionChange}
+              availableFields={availableFields}
             />
           </div>
         </ScrollArea>
