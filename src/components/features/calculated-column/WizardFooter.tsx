@@ -18,7 +18,7 @@ const WizardFooter: React.FC<WizardFooterProps> = ({
   onSave
 }) => {
   return (
-    <div className="flex-shrink-0 flex justify-between w-full p-4 bg-gray-50 border-t">
+    <div className="flex justify-between w-full p-4 bg-gray-50 border-t flex-shrink-0">
       <div>
         {activeTab !== 'type' && (
           <Button 

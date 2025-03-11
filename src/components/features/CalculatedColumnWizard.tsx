@@ -91,20 +91,20 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
 
   return (
     <div className={cn('flex flex-col h-full', className)}>
-      <Card className="flex flex-col h-full">
+      <Card className="flex flex-col h-full overflow-hidden">
         <WizardHeader />
         
         <Tabs 
           value={activeTab} 
           onValueChange={handleTabChangeWrapper}
-          className="flex flex-col flex-1 min-h-0"
+          className="flex flex-col flex-1"
         >
           <WizardTabs 
             activeTab={activeTab} 
             onTabChange={handleTabChangeWrapper} 
           />
           
-          <CardContent className="flex flex-col flex-1 p-0 min-h-0">
+          <CardContent className="flex flex-col flex-1 p-0 overflow-hidden">
             <WizardContent
               activeTab={activeTab}
               columnId={columnId}

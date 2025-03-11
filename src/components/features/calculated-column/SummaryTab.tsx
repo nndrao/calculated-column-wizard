@@ -17,21 +17,12 @@ const SummaryTab: React.FC<SummaryTabProps> = ({
   settings
 }) => {
   return (
-    <>
-      <div className="mb-8">
-        <h3 className="text-base font-semibold mb-1">Summary</h3>
-        <p className="text-sm text-muted-foreground">
-          Review your AG-Grid calculated column configuration
-        </p>
-      </div>
-      
-      <WizardSummary 
-        columnId={columnId}
-        columnName={columnName}
-        expression={expression}
-        settings={settings}
-      />
-    </>
+    <WizardSummary 
+      columnId={columnId}
+      columnName={columnName}
+      expression={expression}
+      settings={settings}
+    />
   );
 };
 

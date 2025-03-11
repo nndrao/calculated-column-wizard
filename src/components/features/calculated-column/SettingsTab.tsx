@@ -12,19 +12,10 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
   onSettingsChange
 }) => {
   return (
-    <>
-      <div className="mb-8">
-        <h3 className="text-base font-semibold mb-1">Column Settings</h3>
-        <p className="text-sm text-muted-foreground">
-          Configure how the calculated column will behave and display in AG-Grid
-        </p>
-      </div>
-      
-      <ColumnSettings 
-        settings={settings}
-        onChange={onSettingsChange}
-      />
-    </>
+    <ColumnSettings 
+      settings={settings}
+      onChange={onSettingsChange}
+    />
   );
 };
 
