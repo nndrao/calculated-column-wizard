@@ -1,3 +1,4 @@
+
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -38,24 +39,46 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
         resizable: col.settings.resizable,
         valueGetter: (params: any) => {
           try {
-            // Modified approach to handle expressions more safely
-            // Replace any field references like [fieldName] with direct row data access
+            // For debugging
+            console.log(`Processing expression for ${col.columnId}: ${col.expression}`);
+            
             const row = params.data;
             
-            // Replace [fieldName] pattern with actual data access
-            const processedExpression = col.expression.replace(/\[(\w+)\]/g, (match, field) => {
+            // Process the expression to handle both formats:
+            // 1. Direct field references like row.fieldName
+            // 2. Field references in square brackets like [fieldName]
+            let processedExpression = col.expression;
+            
+            // Replace square bracket notation with direct row access
+            processedExpression = processedExpression.replace(/\[(\w+)\]/g, (match, field) => {
               return `row.${field}`;
             });
             
-            // For debugging
-            console.log(`Processing expression for ${col.columnId}: ${processedExpression}`);
+            // If the expression doesn't contain "row." prefix but might reference fields directly
+            const fieldRegex = new RegExp(`\\b(${Object.keys(row).join('|')})\\b`, 'g');
+            if (!processedExpression.includes('row.') && 
+                fieldRegex.test(processedExpression)) {
+              // Add row. prefix to field names that are not already prefixed
+              processedExpression = processedExpression.replace(fieldRegex, (match) => {
+                return `row.${match}`;
+              });
+            }
             
-            // eslint-disable-next-line no-new-func
-            const evalFn = new Function('row', `return ${processedExpression}`);
-            return evalFn(row);
+            // Create and execute the function to evaluate the expression
+            const evalFn = new Function('row', `
+              try {
+                return ${processedExpression};
+              } catch (e) {
+                console.error("Expression evaluation error:", e);
+                return null;
+              }
+            `);
+            
+            const result = evalFn(row);
+            return result !== undefined ? result : null;
           } catch (error) {
             console.error(`Error evaluating expression for ${col.columnId}:`, error);
-            return 'Error';
+            return null;
           }
         },
         valueFormatter: (params: any) => {
