@@ -161,7 +161,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
 
   return (
     <div className={cn('wizard-container flex flex-col h-full', className)}>
-      <Card className="flex-1 shadow-sm border border-gray-200 overflow-hidden">
+      <Card className="flex-1 shadow-sm border border-gray-200 overflow-hidden flex flex-col">
         <CardHeader className="bg-gray-50 border-b pb-3 pt-4">
           <CardTitle className="text-lg font-medium">Calculated Column Wizard</CardTitle>
           <CardDescription>
@@ -252,17 +252,17 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               />
             </TabsContent>
           </CardContent>
-          
-          <CardFooter className="p-0">
-            <WizardFooter
-              activeTab={activeTab}
-              onBack={handleBack}
-              onNext={handleNext}
-              onCancel={onCancel || (() => {})}
-              onSave={handleSave}
-            />
-          </CardFooter>
         </Tabs>
+        
+        <CardFooter className="p-0 mt-auto border-t">
+          <WizardFooter
+            activeTab={activeTab}
+            onBack={handleBack}
+            onNext={handleNext}
+            onCancel={onCancel || (() => {})}
+            onSave={handleSave}
+          />
+        </CardFooter>
       </Card>
     </div>
   );

@@ -32,7 +32,7 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
   };
 
   return (
-    <div className={cn('flex flex-col h-full border rounded-md bg-white', className)}>
+    <div className={cn('flex flex-col border rounded-md bg-white h-full', className)}>
       <div className="border-b px-4 py-3 bg-gray-50 rounded-t-md">
         <h3 className="text-sm font-medium">Expression Builder</h3>
       </div>
