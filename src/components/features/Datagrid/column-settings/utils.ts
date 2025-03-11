@@ -11,8 +11,8 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     autoHeaderHeight: settings.autoHeaderHeight
   };
 
-  // Apply header styles through headerClass
-  const headerStyles = {
+  // Apply header styles directly instead of using CSS classes
+  colDefUpdate.headerStyle = {
     color: settings.headerStyle.color,
     backgroundColor: settings.headerStyle.backgroundColor,
     fontWeight: settings.headerStyle.fontWeight,
@@ -23,22 +23,6 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     borderRight: `${settings.headerStyle.border.right.width}px ${settings.headerStyle.border.right.style} ${settings.headerStyle.border.right.color}`,
     borderBottom: `${settings.headerStyle.border.bottom.width}px ${settings.headerStyle.border.bottom.style} ${settings.headerStyle.border.bottom.color}`,
     borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
-  };
-
-  // Apply header styles through CSS class
-  colDefUpdate.headerClass = (params) => {
-    const styleId = `header-style-${field}`;
-    const styleEl = document.getElementById(styleId) || document.createElement('style');
-    styleEl.id = styleId;
-    styleEl.textContent = `
-      .${styleId} {
-        ${Object.entries(headerStyles).map(([key, value]) => `${key}: ${value};`).join('\n')}
-      }
-    `;
-    if (!document.getElementById(styleId)) {
-      document.head.appendChild(styleEl);
-    }
-    return styleId;
   };
 
   colDefUpdate.cellStyle = (params: any) => {
