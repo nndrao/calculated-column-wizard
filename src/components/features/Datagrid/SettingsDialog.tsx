@@ -68,8 +68,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl p-0 h-[85vh] rounded-lg overflow-hidden border border-gray-200 shadow-xl">
-        <div className="flex flex-col h-full">
-          <DialogHeader className="p-4 border-b bg-gradient-to-r from-gray-50 to-white">
+        <div className="flex flex-col h-full overflow-hidden">
+          <DialogHeader className="p-4 border-b bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
             <div className="flex items-center justify-between">
               <DialogTitle className="text-xl font-semibold text-gray-800">Grid Settings</DialogTitle>
               <DialogClose className="rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-100">
@@ -79,8 +79,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             <p className="text-sm text-gray-500 mt-1">Configure your data grid with calculated columns and display settings</p>
           </DialogHeader>
           
-          <Tabs defaultValue="calculated-columns" className="flex flex-col flex-1">
-            <div className="border-b bg-white">
+          <Tabs defaultValue="calculated-columns" className="flex flex-col flex-1 overflow-hidden">
+            <div className="border-b bg-white flex-shrink-0">
               <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
                 <TabsTrigger 
                   value="calculated-columns" 
@@ -90,9 +90,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               </TabsList>
             </div>
             
-            <TabsContent value="calculated-columns" className="flex-1 p-0 overflow-hidden mt-0">
+            <TabsContent value="calculated-columns" className="flex-1 p-0 overflow-hidden mt-0 flex flex-col">
               {!showWizard ? (
-                <div className="flex h-full">
+                <div className="flex h-full overflow-hidden">
                   <CalculatedColumnsPanel
                     columns={calculatedColumns}
                     selectedColumnId={selectedColumnId}
@@ -135,8 +135,8 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="h-full flex flex-col">
-                  <div className="bg-gray-50 border-b px-4 py-2 flex items-center">
+                <div className="h-full flex flex-col overflow-hidden">
+                  <div className="bg-gray-50 border-b px-4 py-2 flex items-center flex-shrink-0">
                     <Button 
                       onClick={handleBack} 
                       variant="ghost"
@@ -149,7 +149,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                       Back to Columns
                     </Button>
                   </div>
-                  <div className="flex-1 overflow-auto p-6">
+                  <div className="flex-1 overflow-hidden">
                     <CalculatedColumnWizard
                       onSave={handleSaveColumn}
                       onCancel={handleBack}

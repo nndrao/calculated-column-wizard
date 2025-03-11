@@ -44,7 +44,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <ScrollArea className="flex-1 min-h-0">
+        <ScrollArea className="flex-1">
           <div className="p-6">
             <TypeTab
               columnId={columnId}
@@ -67,7 +67,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <ScrollArea className="flex-1 min-h-0">
+        <ScrollArea className="flex-1">
           <div className="p-6">
             <ExpressionTab
               expression={expression}
@@ -88,7 +88,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <ScrollArea className="flex-1 min-h-0">
+        <ScrollArea className="flex-1">
           <div className="p-6">
             <SettingsTab
               settings={settings}
@@ -109,7 +109,7 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <ScrollArea className="flex-1 min-h-0">
+        <ScrollArea className="flex-1">
           <div className="p-6">
             <SummaryTab
               columnId={columnId}

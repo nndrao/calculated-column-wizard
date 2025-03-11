@@ -97,7 +97,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
         <Tabs 
           value={activeTab} 
           onValueChange={handleTabChangeWrapper}
-          className="flex flex-col flex-1"
+          className="flex flex-col flex-1 overflow-hidden"
         >
           <WizardTabs 
             activeTab={activeTab} 
