@@ -68,14 +68,14 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl p-0 h-[85vh] rounded-lg overflow-hidden border border-gray-200 shadow-xl">
-        <DialogHeader className="p-6 border-b space-y-1 bg-gradient-to-r from-gray-50 to-white">
+        <DialogHeader className="p-4 border-b bg-gradient-to-r from-gray-50 to-white">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-xl font-semibold text-gray-800">Grid Settings</DialogTitle>
             <DialogClose className="rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-100">
               <X className="h-4 w-4" />
             </DialogClose>
           </div>
-          <p className="text-sm text-gray-500">Configure your data grid with calculated columns and display settings</p>
+          <p className="text-sm text-gray-500 mt-1">Configure your data grid with calculated columns and display settings</p>
         </DialogHeader>
         
         <Tabs defaultValue="calculated-columns" className="flex flex-col h-full">
