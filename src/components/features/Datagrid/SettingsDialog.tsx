@@ -145,24 +145,27 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             <p className="text-sm text-gray-500 mt-1">Configure your data grid with calculated columns and display settings</p>
           </DialogHeader>
           
-          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="flex flex-col flex-1 overflow-hidden">
-            <div className="border-b bg-white flex-shrink-0">
-              <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
-                <TabsTrigger 
-                  value="calculated-columns" 
-                  className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium">
-                  Calculated Columns
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="column-settings" 
-                  className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium">
-                  Column Settings
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            
-            <TabsContent value="calculated-columns" className="flex-1 p-0 overflow-hidden mt-0 flex flex-col">
-              {!showWizard ? (
+          {/* Move tabs to the top level as shown in the image */}
+          <div className="border-b bg-white flex-shrink-0">
+            <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
+              <TabsTrigger 
+                value="calculated-columns" 
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium"
+                onClick={() => setSelectedTab('calculated-columns')}>
+                Calculated Columns
+              </TabsTrigger>
+              <TabsTrigger 
+                value="column-settings" 
+                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium"
+                onClick={() => setSelectedTab('column-settings')}>
+                Column Settings
+              </TabsTrigger>
+            </TabsList>
+          </div>
+          
+          <div className="flex-1 overflow-hidden">
+            {selectedTab === 'calculated-columns' && (
+              !showWizard ? (
                 <div className="flex h-full overflow-hidden">
                   <CalculatedColumnsPanel
                     columns={calculatedColumns}
@@ -229,16 +232,16 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
                     />
                   </div>
                 </div>
-              )}
-            </TabsContent>
+              )
+            )}
             
-            <TabsContent value="column-settings" className="flex-1 p-0 overflow-hidden mt-0 flex flex-col">
+            {selectedTab === 'column-settings' && (
               <ColumnSettingsTab 
                 columnDefs={columnDefs} 
                 onUpdateColumnDef={onUpdateColumnDef} 
               />
-            </TabsContent>
-          </Tabs>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

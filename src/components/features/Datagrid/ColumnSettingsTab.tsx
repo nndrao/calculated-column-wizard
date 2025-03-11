@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ColDef } from 'ag-grid-community';
 import { Button } from '@/components/ui/button';
@@ -7,8 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline, FileText, Code, Table, Settings } from 'lucide-react';
+import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline, Settings } from 'lucide-react';
 
 interface ColumnSettingsTabProps {
   columnDefs: ColDef[];
@@ -96,7 +94,7 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
         cellStyle: { ...defaultStyleSettings },
         valueFormatter: 'default',
         customFormatter: '',
-        editable: selectedColDef.editable || false,
+        editable: selectedColDef.editable === true, // Fix for TypeScript error
         cellEditor: selectedColDef.cellEditor || 'default',
         cellRenderer: selectedColDef.cellRenderer || 'default'
       });
@@ -116,9 +114,8 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       editable: settings.editable
     };
 
-    // Apply header styles
-    colDefUpdate.headerClass = 'custom-header';
-    colDefUpdate.headerStyle = {
+    // Apply header styles as cellStyle
+    const headerStyle = {
       fontWeight: settings.headerStyle.fontWeight,
       fontStyle: settings.headerStyle.fontStyle,
       textDecoration: settings.headerStyle.textDecoration,
@@ -132,8 +129,7 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
     };
 
     // Apply cell styles
-    colDefUpdate.cellClass = 'custom-cell';
-    colDefUpdate.cellStyle = {
+    const cellStyle = {
       fontWeight: settings.cellStyle.fontWeight,
       fontStyle: settings.cellStyle.fontStyle,
       textDecoration: settings.cellStyle.textDecoration,
@@ -144,6 +140,30 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       borderRight: `${settings.cellStyle.border.right.width}px ${settings.cellStyle.border.right.style} ${settings.cellStyle.border.right.color}`,
       borderBottom: `${settings.cellStyle.border.bottom.width}px ${settings.cellStyle.border.bottom.style} ${settings.cellStyle.border.bottom.color}`,
       borderLeft: `${settings.cellStyle.border.left.width}px ${settings.cellStyle.border.left.style} ${settings.cellStyle.border.left.color}`
+    };
+
+    // Apply styles correctly (fix TypeScript error)
+    colDefUpdate.headerClass = 'custom-header';
+    colDefUpdate.cellClass = 'custom-cell';
+    
+    // Use correct type for cellStyle and headerStyle
+    colDefUpdate.cellStyle = cellStyle;
+    
+    // Handle headerStyle as a function to avoid type errors
+    colDefUpdate.headerComponentParams = {
+      template: 
+        `<div class="ag-header-cell-label" style="
+          font-weight: ${headerStyle.fontWeight};
+          font-style: ${headerStyle.fontStyle};
+          text-decoration: ${headerStyle.textDecoration};
+          text-align: ${headerStyle.textAlign};
+          background-color: ${headerStyle.backgroundColor};
+          color: ${headerStyle.color};
+          border-top: ${headerStyle.borderTop};
+          border-right: ${headerStyle.borderRight};
+          border-bottom: ${headerStyle.borderBottom};
+          border-left: ${headerStyle.borderLeft};
+        "><span ref="eText" class="ag-header-cell-text"></span></div>`
     };
 
     // Apply value formatter
@@ -167,7 +187,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       } else if (settings.valueFormatter === 'custom' && settings.customFormatter) {
         try {
           // This is a simplified implementation of custom formatter
-          // In a real app, you might want to use a safer way to evaluate
           colDefUpdate.valueFormatter = (params) => {
             const formatterFn = new Function('value', 'data', 'column', `return ${settings.customFormatter}`);
             return formatterFn(params.value, params.data, params.column);
@@ -226,33 +245,33 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
     }));
   };
 
-  return (
-    <div className="flex h-full overflow-hidden">
-      {/* Column Selection Panel */}
-      <div className="w-60 border-r overflow-y-auto bg-gray-50 p-4">
-        <h3 className="font-medium text-sm mb-3">Available Columns</h3>
-        <div className="space-y-1">
-          {columnDefs.map((col) => (
-            <div
-              key={col.field}
-              className={`px-3 py-2 rounded text-sm cursor-pointer ${
-                selectedField === col.field
-                  ? 'bg-primary text-white'
-                  : 'hover:bg-gray-100'
-              }`}
-              onClick={() => setSelectedField(col.field || null)}
-            >
-              {col.headerName || col.field}
-            </div>
-          ))}
+  if (selectedField) {
+    return (
+      <div className="flex h-full overflow-hidden">
+        {/* Column Selection Panel */}
+        <div className="w-60 border-r overflow-y-auto bg-gray-50 p-4">
+          <h3 className="font-medium text-sm mb-3">Available Columns</h3>
+          <div className="space-y-1">
+            {columnDefs.map((col) => (
+              <div
+                key={col.field}
+                className={`px-3 py-2 rounded text-sm cursor-pointer ${
+                  selectedField === col.field
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-gray-100'
+                }`}
+                onClick={() => setSelectedField(col.field || null)}
+              >
+                {col.headerName || col.field}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Settings Content Area */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {selectedField ? (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        {/* Settings Content Area */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">
                 Column: <span className="text-primary">{selectedField}</span>
               </h2>
@@ -261,466 +280,481 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
               </Button>
             </div>
 
-            <Tabs value={currentTab} onValueChange={setCurrentTab}>
-              <TabsList className="grid grid-cols-4 mb-4">
-                <TabsTrigger value="general">General</TabsTrigger>
-                <TabsTrigger value="header">Header Style</TabsTrigger>
-                <TabsTrigger value="cell">Cell Style</TabsTrigger>
-                <TabsTrigger value="format">Formatting</TabsTrigger>
-              </TabsList>
+            {/* Move tabs to the top */}
+            <div className="mt-2">
+              <div className="border-b">
+                <Tabs value={currentTab} onValueChange={setCurrentTab}>
+                  <TabsList className="w-full flex justify-start">
+                    <TabsTrigger value="general">General</TabsTrigger>
+                    <TabsTrigger value="header">Header Style</TabsTrigger>
+                    <TabsTrigger value="cell">Cell Style</TabsTrigger>
+                    <TabsTrigger value="format">Formatting</TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
 
               {/* General Settings */}
-              <TabsContent value="general" className="space-y-4 animate-fade-in">
-                <div className="space-y-2">
-                  <Label htmlFor="headerName">Header Caption</Label>
-                  <Input
-                    id="headerName"
-                    value={settings.headerName}
-                    onChange={(e) => setSettings({ ...settings, headerName: e.target.value })}
-                    className="input-focus-animation"
-                  />
-                </div>
+              {currentTab === 'general' && (
+                <div className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="headerName">Header Caption</Label>
+                    <Input
+                      id="headerName"
+                      value={settings.headerName}
+                      onChange={(e) => setSettings({ ...settings, headerName: e.target.value })}
+                      className="input-focus-animation"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="headerTooltip">Header Tooltip</Label>
-                  <Input
-                    id="headerTooltip"
-                    value={settings.headerTooltip}
-                    onChange={(e) => setSettings({ ...settings, headerTooltip: e.target.value })}
-                    className="input-focus-animation"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="headerTooltip">Header Tooltip</Label>
+                    <Input
+                      id="headerTooltip"
+                      value={settings.headerTooltip}
+                      onChange={(e) => setSettings({ ...settings, headerTooltip: e.target.value })}
+                      className="input-focus-animation"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="cellTooltip">Cell Tooltip Field</Label>
-                  <Input
-                    id="cellTooltip"
-                    value={settings.cellTooltip}
-                    onChange={(e) => setSettings({ ...settings, cellTooltip: e.target.value })}
-                    className="input-focus-animation"
-                    placeholder="Field name to use for tooltip"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="cellTooltip">Cell Tooltip Field</Label>
+                    <Input
+                      id="cellTooltip"
+                      value={settings.cellTooltip}
+                      onChange={(e) => setSettings({ ...settings, cellTooltip: e.target.value })}
+                      className="input-focus-animation"
+                      placeholder="Field name to use for tooltip"
+                    />
+                  </div>
 
-                <div className="flex items-center space-x-2 mt-4">
-                  <Checkbox
-                    id="editable"
-                    checked={settings.editable}
-                    onCheckedChange={(checked) => 
-                      setSettings({ ...settings, editable: checked === true })
-                    }
-                  />
-                  <Label htmlFor="editable">Make column editable</Label>
+                  <div className="flex items-center space-x-2 mt-4">
+                    <Checkbox
+                      id="editable"
+                      checked={settings.editable}
+                      onCheckedChange={(checked) => 
+                        setSettings({ ...settings, editable: checked === true })
+                      }
+                    />
+                    <Label htmlFor="editable">Make column editable</Label>
+                  </div>
                 </div>
-              </TabsContent>
+              )}
 
               {/* Header Style Settings */}
-              <TabsContent value="header" className="space-y-4 animate-fade-in">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Text Alignment</Label>
-                    <div className="flex border rounded-md overflow-hidden">
-                      <Button
-                        type="button"
-                        variant={settings.headerStyle.textAlign === 'left' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('headerStyle', 'textAlign', 'left')}
-                      >
-                        <AlignLeft size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.headerStyle.textAlign === 'center' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('headerStyle', 'textAlign', 'center')}
-                      >
-                        <AlignCenter size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.headerStyle.textAlign === 'right' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('headerStyle', 'textAlign', 'right')}
-                      >
-                        <AlignRight size={16} />
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Text Style</Label>
-                    <div className="flex border rounded-md overflow-hidden">
-                      <Button
-                        type="button"
-                        variant={settings.headerStyle.fontWeight === 'bold' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('headerStyle', 'fontWeight', 
-                          settings.headerStyle.fontWeight === 'bold' ? 'normal' : 'bold'
-                        )}
-                      >
-                        <Bold size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.headerStyle.fontStyle === 'italic' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('headerStyle', 'fontStyle', 
-                          settings.headerStyle.fontStyle === 'italic' ? 'normal' : 'italic'
-                        )}
-                      >
-                        <Italic size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.headerStyle.textDecoration === 'underline' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('headerStyle', 'textDecoration', 
-                          settings.headerStyle.textDecoration === 'underline' ? 'none' : 'underline'
-                        )}
-                      >
-                        <Underline size={16} />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="headerBgColor">Background Color</Label>
-                    <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-8 h-8 border rounded" 
-                        style={{ backgroundColor: settings.headerStyle.backgroundColor }} 
-                      />
-                      <Input
-                        id="headerBgColor"
-                        type="color"
-                        value={settings.headerStyle.backgroundColor}
-                        onChange={(e) => updateStyleSetting('headerStyle', 'backgroundColor', e.target.value)}
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="headerTextColor">Text Color</Label>
-                    <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-8 h-8 border rounded" 
-                        style={{ backgroundColor: settings.headerStyle.color }} 
-                      />
-                      <Input
-                        id="headerTextColor"
-                        type="color"
-                        value={settings.headerStyle.color}
-                        onChange={(e) => updateStyleSetting('headerStyle', 'color', e.target.value)}
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-2">
-                  <Label>Border Settings</Label>
+              {currentTab === 'header' && (
+                <div className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
-                    {(['top', 'right', 'bottom', 'left'] as BorderSide[]).map(side => (
-                      <div key={side} className="space-y-2 border p-3 rounded-md">
-                        <Label className="capitalize">{side} Border</Label>
-                        <div className="grid grid-cols-3 gap-2">
-                          <div>
-                            <Label className="text-xs">Width</Label>
-                            <Input
-                              type="number"
-                              min="0"
-                              max="5"
-                              value={settings.headerStyle.border[side].width}
-                              onChange={(e) => updateBorderSetting('headerStyle', side, 'width', parseInt(e.target.value))}
-                              className="h-8"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Style</Label>
-                            <Select
-                              value={settings.headerStyle.border[side].style}
-                              onValueChange={(value: any) => updateBorderSetting('headerStyle', side, 'style', value)}
-                            >
-                              <SelectTrigger className="h-8">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">None</SelectItem>
-                                <SelectItem value="solid">Solid</SelectItem>
-                                <SelectItem value="dashed">Dashed</SelectItem>
-                                <SelectItem value="dotted">Dotted</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label className="text-xs">Color</Label>
-                            <Input
-                              type="color"
-                              value={settings.headerStyle.border[side].color}
-                              onChange={(e) => updateBorderSetting('headerStyle', side, 'color', e.target.value)}
-                              className="h-8"
-                            />
+                    <div className="space-y-2">
+                      <Label>Text Alignment</Label>
+                      <div className="flex border rounded-md overflow-hidden">
+                        <Button
+                          type="button"
+                          variant={settings.headerStyle.textAlign === 'left' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('headerStyle', 'textAlign', 'left')}
+                        >
+                          <AlignLeft size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.headerStyle.textAlign === 'center' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('headerStyle', 'textAlign', 'center')}
+                        >
+                          <AlignCenter size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.headerStyle.textAlign === 'right' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('headerStyle', 'textAlign', 'right')}
+                        >
+                          <AlignRight size={16} />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Text Style</Label>
+                      <div className="flex border rounded-md overflow-hidden">
+                        <Button
+                          type="button"
+                          variant={settings.headerStyle.fontWeight === 'bold' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('headerStyle', 'fontWeight', 
+                            settings.headerStyle.fontWeight === 'bold' ? 'normal' : 'bold'
+                          )}
+                        >
+                          <Bold size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.headerStyle.fontStyle === 'italic' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('headerStyle', 'fontStyle', 
+                            settings.headerStyle.fontStyle === 'italic' ? 'normal' : 'italic'
+                          )}
+                        >
+                          <Italic size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.headerStyle.textDecoration === 'underline' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('headerStyle', 'textDecoration', 
+                            settings.headerStyle.textDecoration === 'underline' ? 'none' : 'underline'
+                          )}
+                        >
+                          <Underline size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="headerBgColor">Background Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <div 
+                          className="w-8 h-8 border rounded" 
+                          style={{ backgroundColor: settings.headerStyle.backgroundColor }} 
+                        />
+                        <Input
+                          id="headerBgColor"
+                          type="color"
+                          value={settings.headerStyle.backgroundColor}
+                          onChange={(e) => updateStyleSetting('headerStyle', 'backgroundColor', e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="headerTextColor">Text Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <div 
+                          className="w-8 h-8 border rounded" 
+                          style={{ backgroundColor: settings.headerStyle.color }} 
+                        />
+                        <Input
+                          id="headerTextColor"
+                          type="color"
+                          value={settings.headerStyle.color}
+                          onChange={(e) => updateStyleSetting('headerStyle', 'color', e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+                    <Label>Border Settings</Label>
+                    <div className="grid grid-cols-2 gap-4">
+                      {(['top', 'right', 'bottom', 'left'] as BorderSide[]).map(side => (
+                        <div key={side} className="space-y-2 border p-3 rounded-md">
+                          <Label className="capitalize">{side} Border</Label>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <Label className="text-xs">Width</Label>
+                              <Input
+                                type="number"
+                                min="0"
+                                max="5"
+                                value={settings.headerStyle.border[side].width}
+                                onChange={(e) => updateBorderSetting('headerStyle', side, 'width', parseInt(e.target.value))}
+                                className="h-8"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs">Style</Label>
+                              <Select
+                                value={settings.headerStyle.border[side].style}
+                                onValueChange={(value: any) => updateBorderSetting('headerStyle', side, 'style', value)}
+                              >
+                                <SelectTrigger className="h-8">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="none">None</SelectItem>
+                                  <SelectItem value="solid">Solid</SelectItem>
+                                  <SelectItem value="dashed">Dashed</SelectItem>
+                                  <SelectItem value="dotted">Dotted</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label className="text-xs">Color</Label>
+                              <Input
+                                type="color"
+                                value={settings.headerStyle.border[side].color}
+                                onChange={(e) => updateBorderSetting('headerStyle', side, 'color', e.target.value)}
+                                className="h-8"
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </TabsContent>
+              )}
 
               {/* Cell Style Settings */}
-              <TabsContent value="cell" className="space-y-4 animate-fade-in">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Text Alignment</Label>
-                    <div className="flex border rounded-md overflow-hidden">
-                      <Button
-                        type="button"
-                        variant={settings.cellStyle.textAlign === 'left' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('cellStyle', 'textAlign', 'left')}
-                      >
-                        <AlignLeft size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.cellStyle.textAlign === 'center' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('cellStyle', 'textAlign', 'center')}
-                      >
-                        <AlignCenter size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.cellStyle.textAlign === 'right' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('cellStyle', 'textAlign', 'right')}
-                      >
-                        <AlignRight size={16} />
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Text Style</Label>
-                    <div className="flex border rounded-md overflow-hidden">
-                      <Button
-                        type="button"
-                        variant={settings.cellStyle.fontWeight === 'bold' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('cellStyle', 'fontWeight', 
-                          settings.cellStyle.fontWeight === 'bold' ? 'normal' : 'bold'
-                        )}
-                      >
-                        <Bold size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.cellStyle.fontStyle === 'italic' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('cellStyle', 'fontStyle', 
-                          settings.cellStyle.fontStyle === 'italic' ? 'normal' : 'italic'
-                        )}
-                      >
-                        <Italic size={16} />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant={settings.cellStyle.textDecoration === 'underline' ? 'default' : 'ghost'}
-                        className="flex-1 rounded-none"
-                        onClick={() => updateStyleSetting('cellStyle', 'textDecoration', 
-                          settings.cellStyle.textDecoration === 'underline' ? 'none' : 'underline'
-                        )}
-                      >
-                        <Underline size={16} />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mt-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="cellBgColor">Background Color</Label>
-                    <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-8 h-8 border rounded" 
-                        style={{ backgroundColor: settings.cellStyle.backgroundColor }} 
-                      />
-                      <Input
-                        id="cellBgColor"
-                        type="color"
-                        value={settings.cellStyle.backgroundColor}
-                        onChange={(e) => updateStyleSetting('cellStyle', 'backgroundColor', e.target.value)}
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="cellTextColor">Text Color</Label>
-                    <div className="flex items-center space-x-2">
-                      <div 
-                        className="w-8 h-8 border rounded" 
-                        style={{ backgroundColor: settings.cellStyle.color }} 
-                      />
-                      <Input
-                        id="cellTextColor"
-                        type="color"
-                        value={settings.cellStyle.color}
-                        onChange={(e) => updateStyleSetting('cellStyle', 'color', e.target.value)}
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-4 space-y-2">
-                  <Label>Border Settings</Label>
+              {currentTab === 'cell' && (
+                <div className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
-                    {(['top', 'right', 'bottom', 'left'] as BorderSide[]).map(side => (
-                      <div key={side} className="space-y-2 border p-3 rounded-md">
-                        <Label className="capitalize">{side} Border</Label>
-                        <div className="grid grid-cols-3 gap-2">
-                          <div>
-                            <Label className="text-xs">Width</Label>
-                            <Input
-                              type="number"
-                              min="0"
-                              max="5"
-                              value={settings.cellStyle.border[side].width}
-                              onChange={(e) => updateBorderSetting('cellStyle', side, 'width', parseInt(e.target.value))}
-                              className="h-8"
-                            />
-                          </div>
-                          <div>
-                            <Label className="text-xs">Style</Label>
-                            <Select
-                              value={settings.cellStyle.border[side].style}
-                              onValueChange={(value: any) => updateBorderSetting('cellStyle', side, 'style', value)}
-                            >
-                              <SelectTrigger className="h-8">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="none">None</SelectItem>
-                                <SelectItem value="solid">Solid</SelectItem>
-                                <SelectItem value="dashed">Dashed</SelectItem>
-                                <SelectItem value="dotted">Dotted</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div>
-                            <Label className="text-xs">Color</Label>
-                            <Input
-                              type="color"
-                              value={settings.cellStyle.border[side].color}
-                              onChange={(e) => updateBorderSetting('cellStyle', side, 'color', e.target.value)}
-                              className="h-8"
-                            />
+                    <div className="space-y-2">
+                      <Label>Text Alignment</Label>
+                      <div className="flex border rounded-md overflow-hidden">
+                        <Button
+                          type="button"
+                          variant={settings.cellStyle.textAlign === 'left' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('cellStyle', 'textAlign', 'left')}
+                        >
+                          <AlignLeft size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.cellStyle.textAlign === 'center' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('cellStyle', 'textAlign', 'center')}
+                        >
+                          <AlignCenter size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.cellStyle.textAlign === 'right' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('cellStyle', 'textAlign', 'right')}
+                        >
+                          <AlignRight size={16} />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label>Text Style</Label>
+                      <div className="flex border rounded-md overflow-hidden">
+                        <Button
+                          type="button"
+                          variant={settings.cellStyle.fontWeight === 'bold' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('cellStyle', 'fontWeight', 
+                            settings.cellStyle.fontWeight === 'bold' ? 'normal' : 'bold'
+                          )}
+                        >
+                          <Bold size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.cellStyle.fontStyle === 'italic' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('cellStyle', 'fontStyle', 
+                            settings.cellStyle.fontStyle === 'italic' ? 'normal' : 'italic'
+                          )}
+                        >
+                          <Italic size={16} />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={settings.cellStyle.textDecoration === 'underline' ? 'default' : 'ghost'}
+                          className="flex-1 rounded-none"
+                          onClick={() => updateStyleSetting('cellStyle', 'textDecoration', 
+                            settings.cellStyle.textDecoration === 'underline' ? 'none' : 'underline'
+                          )}
+                        >
+                          <Underline size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="cellBgColor">Background Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <div 
+                          className="w-8 h-8 border rounded" 
+                          style={{ backgroundColor: settings.cellStyle.backgroundColor }} 
+                        />
+                        <Input
+                          id="cellBgColor"
+                          type="color"
+                          value={settings.cellStyle.backgroundColor}
+                          onChange={(e) => updateStyleSetting('cellStyle', 'backgroundColor', e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="cellTextColor">Text Color</Label>
+                      <div className="flex items-center space-x-2">
+                        <div 
+                          className="w-8 h-8 border rounded" 
+                          style={{ backgroundColor: settings.cellStyle.color }} 
+                        />
+                        <Input
+                          id="cellTextColor"
+                          type="color"
+                          value={settings.cellStyle.color}
+                          onChange={(e) => updateStyleSetting('cellStyle', 'color', e.target.value)}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+                    <Label>Border Settings</Label>
+                    <div className="grid grid-cols-2 gap-4">
+                      {(['top', 'right', 'bottom', 'left'] as BorderSide[]).map(side => (
+                        <div key={side} className="space-y-2 border p-3 rounded-md">
+                          <Label className="capitalize">{side} Border</Label>
+                          <div className="grid grid-cols-3 gap-2">
+                            <div>
+                              <Label className="text-xs">Width</Label>
+                              <Input
+                                type="number"
+                                min="0"
+                                max="5"
+                                value={settings.cellStyle.border[side].width}
+                                onChange={(e) => updateBorderSetting('cellStyle', side, 'width', parseInt(e.target.value))}
+                                className="h-8"
+                              />
+                            </div>
+                            <div>
+                              <Label className="text-xs">Style</Label>
+                              <Select
+                                value={settings.cellStyle.border[side].style}
+                                onValueChange={(value: any) => updateBorderSetting('cellStyle', side, 'style', value)}
+                              >
+                                <SelectTrigger className="h-8">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="none">None</SelectItem>
+                                  <SelectItem value="solid">Solid</SelectItem>
+                                  <SelectItem value="dashed">Dashed</SelectItem>
+                                  <SelectItem value="dotted">Dotted</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                            <div>
+                              <Label className="text-xs">Color</Label>
+                              <Input
+                                type="color"
+                                value={settings.cellStyle.border[side].color}
+                                onChange={(e) => updateBorderSetting('cellStyle', side, 'color', e.target.value)}
+                                className="h-8"
+                              />
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </TabsContent>
+              )}
 
               {/* Formatting and Other Settings */}
-              <TabsContent value="format" className="space-y-4 animate-fade-in">
-                <div className="space-y-2">
-                  <Label htmlFor="valueFormatter">Value Formatter</Label>
-                  <Select
-                    value={settings.valueFormatter}
-                    onValueChange={(value) => setSettings({ ...settings, valueFormatter: value })}
-                  >
-                    <SelectTrigger id="valueFormatter" className="w-full">
-                      <SelectValue placeholder="Select value formatter" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="default">Default</SelectItem>
-                      <SelectItem value="number">Number</SelectItem>
-                      <SelectItem value="currency">Currency</SelectItem>
-                      <SelectItem value="percentage">Percentage</SelectItem>
-                      <SelectItem value="date">Date</SelectItem>
-                      <SelectItem value="custom">Custom (Excel-like)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {settings.valueFormatter === 'custom' && (
+              {currentTab === 'format' && (
+                <div className="space-y-4 mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="customFormatter">Custom Formatter (Excel-like)</Label>
-                    <div className="flex items-center border border-input p-2 rounded-md bg-muted/30">
-                      <Code size={16} className="mr-2 text-gray-500" />
-                      <Input
-                        id="customFormatter"
-                        value={settings.customFormatter}
-                        onChange={(e) => setSettings({ ...settings, customFormatter: e.target.value })}
-                        className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
-                        placeholder="e.g., value.toFixed(2) + ' units'"
-                      />
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      Use 'value' to refer to the cell value, 'data' for the entire row data, and 'column' for column info.
-                    </p>
+                    <Label htmlFor="valueFormatter">Value Formatter</Label>
+                    <Select
+                      value={settings.valueFormatter}
+                      onValueChange={(value) => setSettings({ ...settings, valueFormatter: value })}
+                    >
+                      <SelectTrigger id="valueFormatter" className="w-full">
+                        <SelectValue placeholder="Select value formatter" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="default">Default</SelectItem>
+                        <SelectItem value="number">Number</SelectItem>
+                        <SelectItem value="currency">Currency</SelectItem>
+                        <SelectItem value="percentage">Percentage</SelectItem>
+                        <SelectItem value="date">Date</SelectItem>
+                        <SelectItem value="custom">Custom (Excel-like)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                )}
 
-                <div className="space-y-2 pt-4">
-                  <Label htmlFor="cellEditor">Cell Editor</Label>
-                  <Select
-                    value={settings.cellEditor}
-                    onValueChange={(value) => setSettings({ ...settings, cellEditor: value })}
-                  >
-                    <SelectTrigger id="cellEditor">
-                      <SelectValue placeholder="Select cell editor" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="default">Default</SelectItem>
-                      <SelectItem value="agTextCellEditor">Text Editor</SelectItem>
-                      <SelectItem value="agLargeTextCellEditor">Large Text Editor</SelectItem>
-                      <SelectItem value="agSelectCellEditor">Select Editor</SelectItem>
-                      <SelectItem value="agNumberCellEditor">Number Editor</SelectItem>
-                      <SelectItem value="agDateCellEditor">Date Editor</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                  {settings.valueFormatter === 'custom' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="customFormatter">Custom Formatter (Excel-like)</Label>
+                      <div className="flex items-center border border-input p-2 rounded-md bg-muted/30">
+                        <Code size={16} className="mr-2 text-gray-500" />
+                        <Input
+                          id="customFormatter"
+                          value={settings.customFormatter}
+                          onChange={(e) => setSettings({ ...settings, customFormatter: e.target.value })}
+                          className="flex-1 border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
+                          placeholder="e.g., value.toFixed(2) + ' units'"
+                        />
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Use 'value' to refer to the cell value, 'data' for the entire row data, and 'column' for column info.
+                      </p>
+                    </div>
+                  )}
 
-                <div className="space-y-2 pt-4">
-                  <Label htmlFor="cellRenderer">Cell Renderer</Label>
-                  <Select
-                    value={settings.cellRenderer}
-                    onValueChange={(value) => setSettings({ ...settings, cellRenderer: value })}
-                  >
-                    <SelectTrigger id="cellRenderer">
-                      <SelectValue placeholder="Select cell renderer" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="default">Default</SelectItem>
-                      <SelectItem value="agAnimateShowChangeCellRenderer">Animate Show Change</SelectItem>
-                      <SelectItem value="agAnimateSlideCellRenderer">Animate Slide</SelectItem>
-                      <SelectItem value="agGroupCellRenderer">Group Cell</SelectItem>
-                      <SelectItem value="agSparklineCellRenderer">Sparkline</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="space-y-2 pt-4">
+                    <Label htmlFor="cellEditor">Cell Editor</Label>
+                    <Select
+                      value={settings.cellEditor}
+                      onValueChange={(value) => setSettings({ ...settings, cellEditor: value })}
+                    >
+                      <SelectTrigger id="cellEditor">
+                        <SelectValue placeholder="Select cell editor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="default">Default</SelectItem>
+                        <SelectItem value="agTextCellEditor">Text Editor</SelectItem>
+                        <SelectItem value="agLargeTextCellEditor">Large Text Editor</SelectItem>
+                        <SelectItem value="agSelectCellEditor">Select Editor</SelectItem>
+                        <SelectItem value="agNumberCellEditor">Number Editor</SelectItem>
+                        <SelectItem value="agDateCellEditor">Date Editor</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2 pt-4">
+                    <Label htmlFor="cellRenderer">Cell Renderer</Label>
+                    <Select
+                      value={settings.cellRenderer}
+                      onValueChange={(value) => setSettings({ ...settings, cellRenderer: value })}
+                    >
+                      <SelectTrigger id="cellRenderer">
+                        <SelectValue placeholder="Select cell renderer" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="default">Default</SelectItem>
+                        <SelectItem value="agAnimateShowChangeCellRenderer">Animate Show Change</SelectItem>
+                        <SelectItem value="agAnimateSlideCellRenderer">Animate Slide</SelectItem>
+                        <SelectItem value="agGroupCellRenderer">Group Cell</SelectItem>
+                        <SelectItem value="agSparklineCellRenderer">Sparkline</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <Settings className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Select a Column</h3>
-              <p className="text-gray-500 max-w-md">
-                Choose a column from the list on the left to configure its settings.
-              </p>
+              )}
             </div>
           </div>
-        )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center">
+        <Settings className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+        <h3 className="text-lg font-medium text-gray-700 mb-2">Select a Column</h3>
+        <p className="text-gray-500 max-w-md">
+          Choose a column from the list on the left to configure its settings.
+        </p>
       </div>
     </div>
   );
