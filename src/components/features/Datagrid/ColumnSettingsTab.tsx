@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { ColDef } from 'ag-grid-community';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ColumnSettings, ColumnSettingsTabProps, StyleSettings, BorderSide } from './column-settings/types';
+import { ColumnSettings, ColumnSettingsTabProps } from './column-settings/types';
 import { defaultColumnSettings } from './column-settings/constants';
 import { buildColumnDef } from './column-settings/utils';
 import ColumnSelector from './column-settings/ColumnSelector';
@@ -85,66 +84,66 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
 
   if (!selectedField) {
     return (
-      <div className="h-full">
+      <div className="h-full flex items-center justify-center">
         <EmptyState />
       </div>
     );
   }
 
   return (
-    <div className="flex h-full overflow-hidden">
-      <ColumnSelector 
-        columnDefs={columnDefs}
-        selectedField={selectedField}
-        setSelectedField={setSelectedField}
-      />
+    <div className="flex h-full">
+      <div className="w-60 border-r h-full overflow-y-auto bg-gray-50">
+        <ColumnSelector 
+          columnDefs={columnDefs}
+          selectedField={selectedField}
+          setSelectedField={setSelectedField}
+        />
+      </div>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">
-              Column: <span className="text-primary">{selectedField}</span>
-            </h2>
-            <Button onClick={handleSaveChanges}>
-              Save Changes
-            </Button>
-          </div>
-
-          <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-            <TabsList className="w-full justify-start mb-6">
-              <TabsTrigger value="general">General</TabsTrigger>
-              <TabsTrigger value="header">Header Style</TabsTrigger>
-              <TabsTrigger value="cell">Cell Style</TabsTrigger>
-              <TabsTrigger value="format">Formatting</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="general">
-              <GeneralTab settings={settings} setSettings={setSettings} />
-            </TabsContent>
-            
-            <TabsContent value="header">
-              <StyleTab 
-                settings={settings} 
-                tabType="header"
-                updateStyleSetting={updateStyleSetting}
-                updateBorderSetting={updateBorderSetting}
-              />
-            </TabsContent>
-            
-            <TabsContent value="cell">
-              <StyleTab 
-                settings={settings} 
-                tabType="cell"
-                updateStyleSetting={updateStyleSetting}
-                updateBorderSetting={updateBorderSetting}
-              />
-            </TabsContent>
-            
-            <TabsContent value="format">
-              <FormatTab settings={settings} setSettings={setSettings} />
-            </TabsContent>
-          </Tabs>
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">
+            Column: <span className="text-primary">{selectedField}</span>
+          </h2>
+          <Button onClick={handleSaveChanges}>
+            Save Changes
+          </Button>
         </div>
+
+        <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+          <TabsList className="w-full justify-start mb-6">
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="header">Header Style</TabsTrigger>
+            <TabsTrigger value="cell">Cell Style</TabsTrigger>
+            <TabsTrigger value="format">Formatting</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="general">
+            <GeneralTab settings={settings} setSettings={setSettings} />
+          </TabsContent>
+          
+          <TabsContent value="header">
+            <StyleTab 
+              settings={settings} 
+              tabType="header"
+              updateStyleSetting={updateStyleSetting}
+              updateBorderSetting={updateBorderSetting}
+            />
+          </TabsContent>
+          
+          <TabsContent value="cell">
+            <StyleTab 
+              settings={settings} 
+              tabType="cell"
+              updateStyleSetting={updateStyleSetting}
+              updateBorderSetting={updateBorderSetting}
+            />
+          </TabsContent>
+          
+          <TabsContent value="format">
+            <FormatTab settings={settings} setSettings={setSettings} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

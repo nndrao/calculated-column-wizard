@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ColDef } from 'ag-grid-community';
@@ -91,26 +90,24 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           <DialogHeader />
         </div>
         
-        <Tabs value={selectedTab} onValueChange={setSelectedTab} className="flex-1 flex flex-col overflow-hidden">
+        <Tabs 
+          value={selectedTab} 
+          onValueChange={setSelectedTab} 
+          className="flex-1 flex flex-col h-full overflow-hidden"
+        >
           <div className="border-b bg-white flex-shrink-0">
             <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
-              <TabsTrigger 
-                value="calculated-columns" 
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium"
-              >
+              <TabsTrigger value="calculated-columns">
                 Calculated Columns
               </TabsTrigger>
-              <TabsTrigger 
-                value="column-settings" 
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium"
-              >
+              <TabsTrigger value="column-settings">
                 Column Settings
               </TabsTrigger>
             </TabsList>
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <TabsContent value="calculated-columns" className="h-full">
+            <TabsContent value="calculated-columns" className="h-full m-0">
               <CalculatedColumnsTabContent
                 showWizard={showWizard}
                 calculatedColumns={calculatedColumns}
@@ -127,7 +124,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
               />
             </TabsContent>
             
-            <TabsContent value="column-settings" className="h-full">
+            <TabsContent value="column-settings" className="h-full m-0">
               <ColumnSettingsTab 
                 columnDefs={columnDefs} 
                 onUpdateColumnDef={onUpdateColumnDef} 
