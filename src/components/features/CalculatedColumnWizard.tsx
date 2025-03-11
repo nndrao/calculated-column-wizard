@@ -94,9 +94,11 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
     handleNext(columnId, columnName, expression);
   };
 
+  console.log("Current active tab:", activeTab); // Add logging to track the active tab
+
   return (
     <div className={cn('flex flex-col h-full', className)}>
-      <Card className="flex flex-col h-full overflow-hidden">
+      <Card className="flex flex-col h-full overflow-hidden rounded-none border-0">
         <WizardHeader />
         
         <Tabs 
