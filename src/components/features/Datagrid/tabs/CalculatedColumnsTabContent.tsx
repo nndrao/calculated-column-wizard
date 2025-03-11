@@ -43,9 +43,11 @@ const CalculatedColumnsTabContent: React.FC<CalculatedColumnsTabContentProps> = 
   availableFields
 }) => {
   const selectedColumn = calculatedColumns.find(c => c.columnId === selectedColumnId);
+  
+  console.log("CalculatedColumnsTabContent rendering", { showWizard, columnsCount: calculatedColumns.length });
 
   return (
-    <TabsContent value="calculated-columns" className="h-full">
+    <TabsContent value="calculated-columns" className="h-full" forceMount>
       {!showWizard ? (
         <div className="flex h-full overflow-hidden">
           <CalculatedColumnsPanel

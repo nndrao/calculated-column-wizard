@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ColDef } from 'ag-grid-community';
 import { ColumnSettingsType } from '../ColumnSettings';
@@ -55,6 +55,10 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     startDragging
   } = useDialogDrag();
 
+  useEffect(() => {
+    console.log("SettingsDialog: selectedTab changed to", selectedTab);
+  }, [selectedTab]);
+
   const handleNewColumn = () => {
     setSelectedColumnId(null);
     setShowWizard(true);
@@ -108,29 +112,27 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <TabsContent value="column-settings" className="h-full m-0 overflow-auto block">
+            <TabsContent value="column-settings" className="h-full m-0 data-[state=active]:block data-[state=inactive]:hidden">
               <ColumnSettingsTab 
                 columnDefs={columnDefs} 
                 onUpdateColumnDef={onUpdateColumnDef} 
               />
             </TabsContent>
             
-            <TabsContent value="calculated-columns" className="h-full m-0 overflow-auto">
-              <CalculatedColumnsTabContent
-                showWizard={showWizard}
-                calculatedColumns={calculatedColumns}
-                selectedColumnId={selectedColumnId}
-                onSelectColumn={(columnId) => {
-                  setSelectedColumnId(columnId);
-                  setShowWizard(true);
-                }}
-                onNewColumn={handleNewColumn}
-                onDeleteColumn={onDeleteColumn}
-                onSaveColumn={handleSaveColumn}
-                handleBack={handleBack}
-                availableFields={availableFields}
-              />
-            </TabsContent>
+            <CalculatedColumnsTabContent
+              showWizard={showWizard}
+              calculatedColumns={calculatedColumns}
+              selectedColumnId={selectedColumnId}
+              onSelectColumn={(columnId) => {
+                setSelectedColumnId(columnId);
+                setShowWizard(true);
+              }}
+              onNewColumn={handleNewColumn}
+              onDeleteColumn={onDeleteColumn}
+              onSaveColumn={handleSaveColumn}
+              handleBack={handleBack}
+              availableFields={availableFields}
+            />
           </div>
         </Tabs>
       </div>
