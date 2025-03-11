@@ -7,18 +7,12 @@ import {
   GridReadyEvent, 
   GridApi,
   ModuleRegistry,
-  ClientSideRowModelModule,
-  TextFilterModule,
-  NumberFilterModule
+  AllCommunityModules
 } from 'ag-grid-community';
-import { ColumnSettingsType } from './ColumnSettings';
+import { ColumnSettingsType } from '../ColumnSettings';
 
-// Register necessary AG Grid modules
-ModuleRegistry.registerModules([
-  ClientSideRowModelModule,
-  TextFilterModule,
-  NumberFilterModule
-]);
+// Register all AG Grid modules
+ModuleRegistry.registerModules(AllCommunityModules);
 
 interface AgGridWrapperProps {
   columnDefs: ColDef[];
