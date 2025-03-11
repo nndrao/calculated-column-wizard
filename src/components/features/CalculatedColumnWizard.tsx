@@ -1,10 +1,10 @@
+
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Tabs } from "@/components/ui/tabs";
 import { 
   Card,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { useToast } from '@/hooks/use-toast';
 import { ColumnSettingsType } from './ColumnSettings';
@@ -90,39 +90,41 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
   };
 
   return (
-    <div className={cn('flex flex-col min-h-[600px] h-full', className)}>
+    <div className={cn('flex flex-col h-full', className)}>
       <Card className="flex flex-col h-full">
         <WizardHeader />
         
         <Tabs 
           value={activeTab} 
           onValueChange={handleTabChangeWrapper}
-          className="flex-1 flex flex-col h-full"
+          className="flex flex-col flex-1 min-h-0"
         >
           <WizardTabs 
             activeTab={activeTab} 
             onTabChange={handleTabChangeWrapper} 
           />
           
-          <WizardContent
-            activeTab={activeTab}
-            columnId={columnId}
-            columnName={columnName}
-            expression={expression}
-            settings={settings}
-            onColumnIdChange={setColumnId}
-            onColumnNameChange={setColumnName}
-            onExpressionChange={setExpression}
-            onSettingsChange={setSettings}
-          />
-          
-          <WizardFooter
-            activeTab={activeTab}
-            onBack={handleBack}
-            onNext={handleNextWrapper}
-            onCancel={onCancel || (() => {})}
-            onSave={handleSave}
-          />
+          <CardContent className="flex flex-col flex-1 p-0 min-h-0">
+            <WizardContent
+              activeTab={activeTab}
+              columnId={columnId}
+              columnName={columnName}
+              expression={expression}
+              settings={settings}
+              onColumnIdChange={setColumnId}
+              onColumnNameChange={setColumnName}
+              onExpressionChange={setExpression}
+              onSettingsChange={setSettings}
+            />
+            
+            <WizardFooter
+              activeTab={activeTab}
+              onBack={handleBack}
+              onNext={handleNextWrapper}
+              onCancel={onCancel || (() => {})}
+              onSave={handleSave}
+            />
+          </CardContent>
         </Tabs>
       </Card>
     </div>

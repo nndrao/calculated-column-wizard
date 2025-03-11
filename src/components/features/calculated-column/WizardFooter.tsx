@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -17,7 +18,7 @@ const WizardFooter: React.FC<WizardFooterProps> = ({
   onSave
 }) => {
   return (
-    <div className="flex justify-between w-full p-4 bg-gray-50 border-t mt-auto">
+    <div className="flex-shrink-0 flex justify-between w-full p-4 bg-gray-50 border-t">
       <div>
         {activeTab !== 'type' && (
           <Button 
