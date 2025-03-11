@@ -1,3 +1,4 @@
+
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -6,10 +7,13 @@ import {
   ColDef, 
   GridReadyEvent, 
   GridApi,
-  ModuleRegistry,
-  AllCommunityModules
+  ModuleRegistry
 } from 'ag-grid-community';
-import { ColumnSettingsType } from '../ColumnSettings';
+import { ColumnSettingsType } from './ColumnSettings';
+
+// Import the AllCommunityModules correctly (note: it's ModuleS with an S at the end)
+// AllCommunityModules is the correct import, not AllCommunityModule (without the s)
+import { AllCommunityModules } from 'ag-grid-community';
 
 // Register all AG Grid modules
 ModuleRegistry.registerModules(AllCommunityModules);
