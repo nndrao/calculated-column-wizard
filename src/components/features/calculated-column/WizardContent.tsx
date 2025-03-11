@@ -32,51 +32,53 @@ const WizardContent: React.FC<WizardContentProps> = ({
   onSettingsChange
 }) => {
   return (
-    <div className="flex-1 overflow-hidden flex flex-col">
-      <ScrollArea className="flex-1 px-6 py-6">
-        <TabsContent 
-          value="type" 
-          className="mt-0 animate-fade-in data-[state=inactive]:animate-fade-out"
-        >
-          <TypeTab
-            columnId={columnId}
-            columnName={columnName}
-            onColumnIdChange={onColumnIdChange}
-            onColumnNameChange={onColumnNameChange}
-          />
-        </TabsContent>
-        
-        <TabsContent 
-          value="expression" 
-          className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
-        >
-          <ExpressionTab
-            expression={expression}
-            onExpressionChange={onExpressionChange}
-          />
-        </TabsContent>
-        
-        <TabsContent 
-          value="settings" 
-          className="mt-0 animate-fade-in data-[state=inactive]:animate-fade-out"
-        >
-          <SettingsTab
-            settings={settings}
-            onSettingsChange={onSettingsChange}
-          />
-        </TabsContent>
-        
-        <TabsContent 
-          value="summary" 
-          className="mt-0 animate-fade-in data-[state=inactive]:animate-fade-out"
-        >
-          <SummaryTab
-            columnId={columnId}
-            columnName={columnName}
-            expression={expression}
-            settings={settings}
-          />
-        </TabsContent>
+    <div className="flex-1 overflow-hidden relative">
+      <ScrollArea className="h-[calc(100vh-350px)]">
+        <div className="px-6 py-6">
+          <TabsContent 
+            value="type" 
+            className="mt-0 data-[state=inactive]:hidden"
+          >
+            <TypeTab
+              columnId={columnId}
+              columnName={columnName}
+              onColumnIdChange={onColumnIdChange}
+              onColumnNameChange={onColumnNameChange}
+            />
+          </TabsContent>
+          
+          <TabsContent 
+            value="expression" 
+            className="mt-0 data-[state=inactive]:hidden"
+          >
+            <ExpressionTab
+              expression={expression}
+              onExpressionChange={onExpressionChange}
+            />
+          </TabsContent>
+          
+          <TabsContent 
+            value="settings" 
+            className="mt-0 data-[state=inactive]:hidden"
+          >
+            <SettingsTab
+              settings={settings}
+              onSettingsChange={onSettingsChange}
+            />
+          </TabsContent>
+          
+          <TabsContent 
+            value="summary" 
+            className="mt-0 data-[state=inactive]:hidden"
+          >
+            <SummaryTab
+              columnId={columnId}
+              columnName={columnName}
+              expression={expression}
+              settings={settings}
+            />
+          </TabsContent>
+        </div>
       </ScrollArea>
     </div>
   );

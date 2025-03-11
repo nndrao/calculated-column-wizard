@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Tabs } from "@/components/ui/tabs";
@@ -91,14 +90,14 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
   };
 
   return (
-    <div className={cn('wizard-container flex flex-col h-full', className)}>
-      <Card className="flex-1 shadow-sm border border-gray-200 flex flex-col h-full overflow-hidden">
+    <div className={cn('flex flex-col min-h-[600px] h-full', className)}>
+      <Card className="flex flex-col h-full">
         <WizardHeader />
         
         <Tabs 
           value={activeTab} 
           onValueChange={handleTabChangeWrapper}
-          className="flex-1 flex flex-col overflow-hidden"
+          className="flex-1 flex flex-col h-full"
         >
           <WizardTabs 
             activeTab={activeTab} 
@@ -117,15 +116,13 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
             onSettingsChange={setSettings}
           />
           
-          <CardFooter className="p-0 flex-none border-t bg-gray-50">
-            <WizardFooter
-              activeTab={activeTab}
-              onBack={handleBack}
-              onNext={handleNextWrapper}
-              onCancel={onCancel || (() => {})}
-              onSave={handleSave}
-            />
-          </CardFooter>
+          <WizardFooter
+            activeTab={activeTab}
+            onBack={handleBack}
+            onNext={handleNextWrapper}
+            onCancel={onCancel || (() => {})}
+            onSave={handleSave}
+          />
         </Tabs>
       </Card>
     </div>
