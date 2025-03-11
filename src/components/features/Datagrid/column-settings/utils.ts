@@ -1,4 +1,4 @@
-import { ColDef } from 'ag-grid-community';
+import { ColDef, HeaderClassParams } from 'ag-grid-community';
 import { ColumnSettings, StyleSettings } from './types';
 
 export const buildColumnDef = (settings: ColumnSettings, field: string): Partial<ColDef> => {
@@ -6,16 +6,18 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     headerName: settings.headerName,
     headerTooltip: settings.headerTooltip,
     tooltipField: settings.cellTooltip,
-    editable: settings.editable
+    editable: settings.editable,
+    wrapHeaderText: settings.wrapHeaderText,
+    autoHeaderHeight: settings.autoHeaderHeight
   };
 
-  const headerStyle = {
+  colDefUpdate.headerStyle = {
+    color: settings.headerStyle.color,
+    backgroundColor: settings.headerStyle.backgroundColor,
     fontWeight: settings.headerStyle.fontWeight,
     fontStyle: settings.headerStyle.fontStyle,
     textDecoration: settings.headerStyle.textDecoration,
     textAlign: settings.headerStyle.textAlign,
-    backgroundColor: settings.headerStyle.backgroundColor,
-    color: settings.headerStyle.color,
     borderTop: `${settings.headerStyle.border.top.width}px ${settings.headerStyle.border.top.style} ${settings.headerStyle.border.top.color}`,
     borderRight: `${settings.headerStyle.border.right.width}px ${settings.headerStyle.border.right.style} ${settings.headerStyle.border.right.color}`,
     borderBottom: `${settings.headerStyle.border.bottom.width}px ${settings.headerStyle.border.bottom.style} ${settings.headerStyle.border.bottom.color}`,
@@ -35,24 +37,6 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
       borderBottom: `${settings.cellStyle.border.bottom.width}px ${settings.cellStyle.border.bottom.style} ${settings.cellStyle.border.bottom.color}`,
       borderLeft: `${settings.cellStyle.border.left.width}px ${settings.cellStyle.border.left.style} ${settings.cellStyle.border.left.color}`
     };
-  };
-
-  colDefUpdate.headerClass = 'custom-header';
-  
-  colDefUpdate.headerComponentParams = {
-    template: 
-      `<div class="ag-header-cell-label" style="
-        font-weight: ${headerStyle.fontWeight};
-        font-style: ${headerStyle.fontStyle};
-        text-decoration: ${headerStyle.textDecoration};
-        text-align: ${headerStyle.textAlign};
-        background-color: ${headerStyle.backgroundColor};
-        color: ${headerStyle.color};
-        border-top: ${headerStyle.borderTop};
-        border-right: ${headerStyle.borderRight};
-        border-bottom: ${headerStyle.borderBottom};
-        border-left: ${headerStyle.borderLeft};
-      "><span ref="eText" class="ag-header-cell-text"></span></div>`
   };
 
   addValueFormatters(settings, colDefUpdate);

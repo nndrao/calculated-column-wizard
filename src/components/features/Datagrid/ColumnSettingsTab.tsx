@@ -25,6 +25,7 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
 
   useEffect(() => {
     if (selectedColDef) {
+      // Initialize settings from the selected column definition
       setSettings({
         headerName: selectedColDef.headerName || '',
         headerTooltip: selectedColDef.headerTooltip || '',
@@ -35,7 +36,9 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
         customFormatter: '',
         editable: selectedColDef.editable === true,
         cellEditor: selectedColDef.cellEditor || 'default',
-        cellRenderer: selectedColDef.cellRenderer || 'default'
+        cellRenderer: selectedColDef.cellRenderer || 'default',
+        wrapHeaderText: selectedColDef.wrapHeaderText || false,
+        autoHeaderHeight: selectedColDef.autoHeaderHeight || false
       });
     } else {
       setSettings({ ...defaultColumnSettings });
@@ -86,12 +89,14 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
   };
 
   return (
-    <div className="flex h-full">
-      <ColumnSelector 
-        columnDefs={columnDefs}
-        selectedField={selectedField}
-        setSelectedField={setSelectedField}
-      />
+    <div className="flex h-full overflow-hidden">
+      <div className="w-56 border-r overflow-y-auto bg-gray-50">
+        <ColumnSelector 
+          columnDefs={columnDefs}
+          selectedField={selectedField}
+          setSelectedField={setSelectedField}
+        />
+      </div>
 
       <div className="flex-1 overflow-y-auto p-4">
         {!selectedField ? (

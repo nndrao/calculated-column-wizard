@@ -1,9 +1,25 @@
+
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
+import { 
+  ColDef, 
+  GridReadyEvent, 
+  GridApi, 
+  ModuleRegistry,
+  ClientSideRowModelModule,
+  TextFilterModule,
+  NumberFilterModule
+} from 'ag-grid-community';
 import { ColumnSettingsType } from './ColumnSettings';
+
+// Register necessary AG Grid modules
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  TextFilterModule,
+  NumberFilterModule
+]);
 
 interface AgGridWrapperProps {
   columnDefs: ColDef[];
@@ -116,6 +132,9 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     if (gridElement) {
       const styleElement = document.createElement('style');
       styleElement.textContent = `
+        .ag-header-cell {
+          transition: background-color 0.3s, color 0.3s;
+        }
         .custom-header {
           background-color: #f8f9fa;
         }
@@ -124,6 +143,9 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
         }
         .custom-cell:hover {
           background-color: rgba(0, 0, 0, 0.1) !important;
+        }
+        .sport-header {
+          background-color: lightgreen !important;
         }
       `;
       document.head.appendChild(styleElement);

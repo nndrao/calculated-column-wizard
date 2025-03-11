@@ -1,5 +1,5 @@
 
-import { ColDef } from 'ag-grid-community';
+import { ColDef, HeaderClassParams } from 'ag-grid-community';
 
 export type BorderSide = 'top' | 'right' | 'bottom' | 'left';
 
@@ -30,6 +30,8 @@ export interface ColumnSettings {
   editable: boolean;
   cellEditor: string;
   cellRenderer: string;
+  wrapHeaderText?: boolean;
+  autoHeaderHeight?: boolean;
 }
 
 export interface ColumnSettingsTabProps {

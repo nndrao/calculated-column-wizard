@@ -26,5 +26,7 @@ export const defaultColumnSettings: ColumnSettings = {
   customFormatter: '',
   editable: false,
   cellEditor: 'default',
-  cellRenderer: 'default'
+  cellRenderer: 'default',
+  wrapHeaderText: false,
+  autoHeaderHeight: false
 };

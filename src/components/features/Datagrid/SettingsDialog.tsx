@@ -45,7 +45,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 }) => {
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [showWizard, setShowWizard] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('column-settings');  // Default to column-settings tab
+  const [selectedTab, setSelectedTab] = useState('column-settings');
   const {
     dialogPosition,
     isDragging,
@@ -108,7 +108,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <TabsContent value="column-settings" className="h-full m-0 overflow-auto">
+            <TabsContent value="column-settings" className="h-full m-0 overflow-auto block">
               <ColumnSettingsTab 
                 columnDefs={columnDefs} 
                 onUpdateColumnDef={onUpdateColumnDef} 

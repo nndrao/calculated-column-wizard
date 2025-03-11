@@ -54,6 +54,28 @@ const GeneralTab: React.FC<GeneralTabProps> = ({ settings, setSettings }) => {
         />
         <Label htmlFor="editable">Make column editable</Label>
       </div>
+      
+      <div className="flex items-center space-x-2 mt-4">
+        <Checkbox
+          id="wrapHeaderText"
+          checked={settings.wrapHeaderText === true}
+          onCheckedChange={(checked) => 
+            setSettings({ ...settings, wrapHeaderText: checked === true })
+          }
+        />
+        <Label htmlFor="wrapHeaderText">Wrap header text</Label>
+      </div>
+      
+      <div className="flex items-center space-x-2 mt-4">
+        <Checkbox
+          id="autoHeaderHeight"
+          checked={settings.autoHeaderHeight === true}
+          onCheckedChange={(checked) => 
+            setSettings({ ...settings, autoHeaderHeight: checked === true })
+          }
+        />
+        <Label htmlFor="autoHeaderHeight">Auto header height</Label>
+      </div>
     </div>
   );
 };
