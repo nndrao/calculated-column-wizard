@@ -161,8 +161,8 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
 
   return (
     <div className={cn('wizard-container flex flex-col h-full', className)}>
-      <Card className="flex-1 shadow-sm border border-gray-200 overflow-hidden flex flex-col">
-        <CardHeader className="bg-gray-50 border-b pb-3 pt-4">
+      <Card className="flex-1 shadow-sm border border-gray-200 flex flex-col h-full overflow-hidden">
+        <CardHeader className="bg-gray-50 border-b pb-3 pt-4 flex-shrink-0">
           <CardTitle className="text-lg font-medium">Calculated Column Wizard</CardTitle>
           <CardDescription>
             Create a new calculated column based on an expression for AG-Grid
@@ -172,9 +172,9 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
         <Tabs 
           value={activeTab} 
           onValueChange={handleTabChange}
-          className="flex-1 flex flex-col"
+          className="flex-1 flex flex-col min-h-0"
         >
-          <div className="border-b">
+          <div className="border-b flex-shrink-0">
             <TabsList className="flex w-full justify-start rounded-none border-b border-0 p-0">
               <TabsTrigger 
                 value="type" 
@@ -254,7 +254,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
           </CardContent>
         </Tabs>
         
-        <CardFooter className="p-0 mt-auto border-t">
+        <CardFooter className="p-0 flex-shrink-0 border-t bg-gray-50">
           <WizardFooter
             activeTab={activeTab}
             onBack={handleBack}
