@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { 
   Info,
@@ -32,14 +32,13 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
   };
 
   return (
-    <div className={cn('flex flex-col border rounded-md bg-white h-full', className)}>
-      <div className="border-b px-4 py-3 bg-gray-50 rounded-t-md">
+    <div className={cn('flex flex-col border rounded-md bg-white overflow-hidden h-full', className)}>
+      <div className="flex-none border-b px-4 py-3 bg-gray-50 rounded-t-md">
         <h3 className="text-sm font-medium">Expression Builder</h3>
       </div>
       
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left panel - Functions & Fields */}
-        <div className="w-64 border-r overflow-hidden flex flex-col">
+      <div className="flex flex-1 min-h-0">
+        <div className="w-64 border-r flex flex-col">
           <Tabs defaultValue="functions" className="flex flex-col h-full">
             <TabsList className="grid grid-cols-2 mx-2 mt-2 mb-0">
               <TabsTrigger value="functions" className="text-xs">Functions</TabsTrigger>
@@ -58,9 +57,8 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
           </Tabs>
         </div>
         
-        {/* Right panel - Editor */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="border-b p-2 flex items-center justify-between bg-gray-50">
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-none border-b p-2 flex items-center justify-between bg-gray-50">
             <div className="flex items-center">
               <Calculator size={16} className="mr-2 text-blue-600" />
               <span className="text-sm font-medium">Enter Expression</span>

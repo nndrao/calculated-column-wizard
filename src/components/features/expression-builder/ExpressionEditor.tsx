@@ -8,11 +8,11 @@ interface ExpressionEditorProps {
 
 const ExpressionEditor: React.FC<ExpressionEditorProps> = ({ expression, onChange }) => {
   return (
-    <div className="flex-1 p-4 overflow-auto h-full">
+    <div className="flex-1 p-4 overflow-auto flex flex-col">
       <textarea
         value={expression}
         onChange={(e) => onChange(e.target.value)}
-        className="expression-editor w-full h-24 min-h-[6rem] p-3 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent input-focus-animation"
+        className="expression-editor w-full flex-none h-24 p-3 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent input-focus-animation"
         placeholder="Enter expression here... (e.g., if([price] > 100, 'High', 'Low'))"
       />
       

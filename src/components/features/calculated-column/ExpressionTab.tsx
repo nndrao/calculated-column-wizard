@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Code as FunctionIcon } from 'lucide-react';
 import ExpressionBuilder from '../ExpressionBuilder';
@@ -8,7 +7,6 @@ interface ExpressionTabProps {
   onExpressionChange: (expression: string) => void;
 }
 
-// Example of column expressions for AG-Grid
 const EXPRESSION_EXAMPLES = [
   { label: 'Sum', example: 'row.value1 + row.value2' },
   { label: 'Multiply', example: 'row.price * row.quantity' },
@@ -23,24 +21,24 @@ const ExpressionTab: React.FC<ExpressionTabProps> = ({
   onExpressionChange
 }) => {
   return (
-    <div className="h-full flex flex-col">
-      <div className="mb-4">
+    <div className="flex flex-col h-full">
+      <div className="flex-none mb-4">
         <h3 className="text-base font-semibold mb-1">Define Expression</h3>
         <p className="text-sm text-muted-foreground">
           Create the expression that will calculate the column value in AG-Grid
         </p>
       </div>
       
-      <div className="grid md:grid-cols-2 gap-6 flex-1 min-h-0">
-        <div className="flex flex-col">
+      <div className="grid md:grid-cols-2 gap-6 flex-1 overflow-hidden">
+        <div className="flex flex-col min-h-0">
           <ExpressionBuilder 
             expression={expression}
             onChange={onExpressionChange}
-            className="flex-1 min-h-0"
+            className="flex-1"
           />
         </div>
         
-        <div className="border rounded-md bg-gray-50 p-4 overflow-auto">
+        <div className="border rounded-md bg-gray-50 p-4 overflow-y-auto">
           <h4 className="text-sm font-medium mb-3 flex items-center">
             <FunctionIcon className="w-4 h-4 mr-2" />
             Expression Examples
