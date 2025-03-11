@@ -9,13 +9,13 @@ import {
   GridApi,
   ModuleRegistry
 } from 'ag-grid-community';
-import { ColumnSettingsType } from './ColumnSettings';
+import { ColumnSettingsType } from '../ColumnSettings';
 
-// Import the AllCommunityModule (without the 's') as per the reference code
-import { AllCommunityModule } from 'ag-grid-community';
+// Import the AllCommunityModules (with an 's') as per the correct AG-Grid package
+import { AllCommunityModules } from 'ag-grid-community';
 
 // Register all AG Grid modules
-ModuleRegistry.registerModules([AllCommunityModule]);
+ModuleRegistry.registerModules(AllCommunityModules);
 
 interface AgGridWrapperProps {
   columnDefs: ColDef[];
