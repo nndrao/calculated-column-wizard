@@ -9,14 +9,16 @@ interface ToolbarProps {
 
 const Toolbar: React.FC<ToolbarProps> = ({ onSettingsClick }) => {
   return (
-    <div className="h-[60px] border-b flex items-center justify-end px-4 bg-white">
+    <div className="h-[60px] border-b flex items-center justify-between px-4 bg-white">
+      <div className="font-medium text-gray-700">Data Grid</div>
       <Button
-        variant="ghost"
-        size="icon"
+        variant="outline"
+        size="sm"
         onClick={onSettingsClick}
-        className="hover:bg-gray-100"
+        className="text-gray-700 gap-2 hover:bg-gray-50 border-gray-200"
       >
-        <Settings2 className="h-5 w-5" />
+        <Settings2 className="h-4 w-4" />
+        <span>Settings</span>
       </Button>
     </div>
   );

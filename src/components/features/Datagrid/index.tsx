@@ -34,9 +34,9 @@ const Datagrid: React.FC<DatagridProps> = ({
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <div className="h-full flex flex-col bg-white rounded-md border">
+    <div className="h-full flex flex-col bg-white rounded-md border shadow-sm overflow-hidden">
       <Toolbar onSettingsClick={() => setShowSettings(true)} />
-      <div className="flex-1">
+      <div className="flex-1 overflow-hidden">
         <AgGridWrapper
           columnDefs={columnDefs}
           rowData={rowData}
