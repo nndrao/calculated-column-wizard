@@ -84,7 +84,11 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
   };
 
   if (!selectedField) {
-    return <EmptyState />;
+    return (
+      <div className="h-full">
+        <EmptyState />
+      </div>
+    );
   }
 
   return (
