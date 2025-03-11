@@ -12,10 +12,13 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
   onSettingsChange
 }) => {
   return (
-    <ColumnSettings 
-      settings={settings}
-      onChange={onSettingsChange}
-    />
+    <div className="w-full">
+      <ColumnSettings 
+        settings={settings}
+        onChange={onSettingsChange}
+        className="w-full"
+      />
+    </div>
   );
 };
 
