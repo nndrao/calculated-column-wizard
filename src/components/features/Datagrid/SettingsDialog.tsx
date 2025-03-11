@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -145,103 +144,102 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             <p className="text-sm text-gray-500 mt-1">Configure your data grid with calculated columns and display settings</p>
           </DialogHeader>
           
-          {/* Tabs moved to the top level */}
-          <div className="border-b bg-white flex-shrink-0">
-            <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
-              <TabsTrigger 
-                value="calculated-columns" 
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium"
-                onClick={() => setSelectedTab('calculated-columns')}>
-                Calculated Columns
-              </TabsTrigger>
-              <TabsTrigger 
-                value="column-settings" 
-                className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium"
-                onClick={() => setSelectedTab('column-settings')}>
-                Column Settings
-              </TabsTrigger>
-            </TabsList>
-          </div>
-          
-          <div className="flex-1 overflow-hidden">
-            {selectedTab === 'calculated-columns' && (
-              !showWizard ? (
-                <div className="flex h-full overflow-hidden">
-                  <CalculatedColumnsPanel
-                    columns={calculatedColumns}
-                    selectedColumnId={selectedColumnId}
-                    onSelectColumn={(columnId) => {
-                      setSelectedColumnId(columnId);
-                      setShowWizard(true);
-                    }}
-                    onNewColumn={handleNewColumn}
-                    onDeleteColumn={onDeleteColumn}
-                  />
-                  <div className="flex-1 flex items-center justify-center bg-gray-50 border-l">
-                    {calculatedColumns.length === 0 ? (
-                      <div className="text-center p-8">
-                        <div className="text-gray-400 mb-2 text-5xl">
-                          <span className="icon">📊</span>
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-700 mb-2">No Calculated Columns</h3>
-                        <p className="text-gray-500 max-w-md mx-auto mb-4">
-                          Create calculated columns to perform custom calculations on your data.
-                        </p>
-                        <Button
-                          onClick={handleNewColumn}
-                          variant="default"
-                          className="mt-2"
-                        >
-                          Create Your First Column
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="text-center p-8">
-                        <div className="text-gray-400 mb-2 text-4xl">
-                          <span className="icon">👈</span>
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-700 mb-2">Select a Column</h3>
-                        <p className="text-gray-500 max-w-md">
-                          Select a calculated column from the list to edit its properties.
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="h-full flex flex-col overflow-hidden">
-                  <div className="bg-gray-50 border-b px-4 py-2 flex items-center flex-shrink-0">
-                    <Button 
-                      onClick={handleBack} 
-                      variant="ghost"
-                      size="sm"
-                      className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
-                      </svg>
-                      Back to Columns
-                    </Button>
-                  </div>
-                  <div className="flex-1 overflow-hidden">
-                    <CalculatedColumnWizard
-                      onSave={handleSaveColumn}
-                      onCancel={handleBack}
-                      initialData={selectedColumn}
-                      availableFields={availableFields}
-                    />
-                  </div>
-                </div>
-              )
-            )}
+          <Tabs value={selectedTab} onValueChange={setSelectedTab} className="flex-1 flex flex-col overflow-hidden">
+            <div className="border-b bg-white flex-shrink-0">
+              <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
+                <TabsTrigger 
+                  value="calculated-columns" 
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium">
+                  Calculated Columns
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="column-settings" 
+                  className="data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary rounded-none border-b-2 border-transparent px-4 py-2 text-sm font-medium">
+                  Column Settings
+                </TabsTrigger>
+              </TabsList>
+            </div>
             
-            {selectedTab === 'column-settings' && (
-              <ColumnSettingsTab 
-                columnDefs={columnDefs} 
-                onUpdateColumnDef={onUpdateColumnDef} 
-              />
-            )}
-          </div>
+            <div className="flex-1 overflow-hidden">
+              <TabsContent value="calculated-columns" className="h-full">
+                {!showWizard ? (
+                  <div className="flex h-full overflow-hidden">
+                    <CalculatedColumnsPanel
+                      columns={calculatedColumns}
+                      selectedColumnId={selectedColumnId}
+                      onSelectColumn={(columnId) => {
+                        setSelectedColumnId(columnId);
+                        setShowWizard(true);
+                      }}
+                      onNewColumn={handleNewColumn}
+                      onDeleteColumn={onDeleteColumn}
+                    />
+                    <div className="flex-1 flex items-center justify-center bg-gray-50 border-l">
+                      {calculatedColumns.length === 0 ? (
+                        <div className="text-center p-8">
+                          <div className="text-gray-400 mb-2 text-5xl">
+                            <span className="icon">📊</span>
+                          </div>
+                          <h3 className="text-lg font-medium text-gray-700 mb-2">No Calculated Columns</h3>
+                          <p className="text-gray-500 max-w-md mx-auto mb-4">
+                            Create calculated columns to perform custom calculations on your data.
+                          </p>
+                          <Button
+                            onClick={handleNewColumn}
+                            variant="default"
+                            className="mt-2"
+                          >
+                            Create Your First Column
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="text-center p-8">
+                          <div className="text-gray-400 mb-2 text-4xl">
+                            <span className="icon">👈</span>
+                          </div>
+                          <h3 className="text-lg font-medium text-gray-700 mb-2">Select a Column</h3>
+                          <p className="text-gray-500 max-w-md">
+                            Select a calculated column from the list to edit its properties.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-full flex flex-col overflow-hidden">
+                    <div className="bg-gray-50 border-b px-4 py-2 flex items-center flex-shrink-0">
+                      <Button 
+                        onClick={handleBack} 
+                        variant="ghost"
+                        size="sm"
+                        className="text-sm text-gray-600 hover:text-gray-900 flex items-center gap-1"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                        Back to Columns
+                      </Button>
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                      <CalculatedColumnWizard
+                        onSave={handleSaveColumn}
+                        onCancel={handleBack}
+                        initialData={selectedColumn}
+                        availableFields={availableFields}
+                      />
+                    </div>
+                  </div>
+                )}
+              </TabsContent>
+              
+              <TabsContent value="column-settings" className="h-full">
+                <ColumnSettingsTab 
+                  columnDefs={columnDefs} 
+                  onUpdateColumnDef={onUpdateColumnDef} 
+                />
+              </TabsContent>
+            </div>
+          </Tabs>
         </div>
       </DialogContent>
     </Dialog>
