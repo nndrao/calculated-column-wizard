@@ -149,3 +149,22 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #9ca3af;
 }
+
+/* Custom dialog draggable styles */
+[data-radix-dialog-content] {
+  user-select: none;
+}
+
+.dialog-header-draggable {
+  cursor: grab;
+}
+
+.dialog-header-draggable:active {
+  cursor: grabbing;
+}
+
+/* Semi-transparent dialog backdrop */
+.dialog-backdrop-translucent {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+}

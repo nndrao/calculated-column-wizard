@@ -46,6 +46,9 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
 }) => {
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
   const [showWizard, setShowWizard] = useState(false);
+  const [dialogPosition, setDialogPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const selectedColumn = calculatedColumns.find(c => c.columnId === selectedColumnId);
 
@@ -70,11 +73,62 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
     setSelectedColumnId(null);
   };
 
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      setIsDragging(false);
+      return;
+    }
+    
+    setIsDragging(true);
+    setDragStart({ 
+      x: e.clientX - dialogPosition.x, 
+      y: e.clientY - dialogPosition.y 
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isDragging) {
+      setDialogPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl p-0 h-[85vh] rounded-lg overflow-hidden border border-gray-200 shadow-xl">
-        <div className="flex flex-col h-full overflow-hidden">
-          <DialogHeader className="p-4 border-b bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
+      <DialogContent 
+        className="max-w-5xl p-0 h-[85vh] rounded-lg overflow-hidden border border-gray-200 shadow-xl bg-white/90 backdrop-blur-sm"
+        style={{ 
+          transform: `translate(-50%, -50%) translate(${dialogPosition.x}px, ${dialogPosition.y}px)`,
+          transition: isDragging ? 'none' : 'all 0.2s ease',
+          cursor: isDragging ? 'grabbing' : 'auto'
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div 
+          className="flex flex-col h-full overflow-hidden"
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
+          <DialogHeader 
+            className="p-4 border-b bg-gradient-to-r from-gray-100 to-white flex-shrink-0 cursor-grab active:cursor-grabbing"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              setIsDragging(true);
+              setDragStart({ 
+                x: e.clientX - dialogPosition.x, 
+                y: e.clientY - dialogPosition.y 
+              });
+            }}
+          >
             <div className="flex items-center justify-between">
               <DialogTitle className="text-xl font-semibold text-gray-800">Grid Settings</DialogTitle>
               <DialogClose className="rounded-full h-8 w-8 flex items-center justify-center hover:bg-gray-100">
