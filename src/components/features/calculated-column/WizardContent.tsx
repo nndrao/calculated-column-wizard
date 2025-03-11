@@ -44,18 +44,16 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="p-6">
-              <TypeTab
-                columnId={columnId}
-                columnName={columnName}
-                onColumnIdChange={onColumnIdChange}
-                onColumnNameChange={onColumnNameChange}
-              />
-            </div>
-          </ScrollArea>
-        </div>
+        <ScrollArea className="flex-1 min-h-0">
+          <div className="p-6">
+            <TypeTab
+              columnId={columnId}
+              columnName={columnName}
+              onColumnIdChange={onColumnIdChange}
+              onColumnNameChange={onColumnNameChange}
+            />
+          </div>
+        </ScrollArea>
       </TabsContent>
       
       <TabsContent 
@@ -69,16 +67,14 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="p-6">
-              <ExpressionTab
-                expression={expression}
-                onExpressionChange={onExpressionChange}
-              />
-            </div>
-          </ScrollArea>
-        </div>
+        <ScrollArea className="flex-1 min-h-0">
+          <div className="p-6">
+            <ExpressionTab
+              expression={expression}
+              onExpressionChange={onExpressionChange}
+            />
+          </div>
+        </ScrollArea>
       </TabsContent>
       
       <TabsContent 
@@ -92,16 +88,14 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="p-6">
-              <SettingsTab
-                settings={settings}
-                onSettingsChange={onSettingsChange}
-              />
-            </div>
-          </ScrollArea>
-        </div>
+        <ScrollArea className="flex-1 min-h-0">
+          <div className="p-6">
+            <SettingsTab
+              settings={settings}
+              onSettingsChange={onSettingsChange}
+            />
+          </div>
+        </ScrollArea>
       </TabsContent>
       
       <TabsContent 
@@ -115,18 +109,16 @@ const WizardContent: React.FC<WizardContentProps> = ({
           </p>
         </div>
         
-        <div className="flex-1 min-h-0 overflow-hidden">
-          <ScrollArea className="h-full">
-            <div className="p-6">
-              <SummaryTab
-                columnId={columnId}
-                columnName={columnName}
-                expression={expression}
-                settings={settings}
-              />
-            </div>
-          </ScrollArea>
-        </div>
+        <ScrollArea className="flex-1 min-h-0">
+          <div className="p-6">
+            <SummaryTab
+              columnId={columnId}
+              columnName={columnName}
+              expression={expression}
+              settings={settings}
+            />
+          </div>
+        </ScrollArea>
       </TabsContent>
     </div>
   );

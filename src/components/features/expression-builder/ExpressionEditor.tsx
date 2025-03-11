@@ -8,8 +8,8 @@ interface ExpressionEditorProps {
 
 const ExpressionEditor: React.FC<ExpressionEditorProps> = ({ expression, onChange }) => {
   return (
-    <div className="p-4 overflow-auto h-full flex flex-col space-y-4">
-      <div className="flex-none">
+    <div className="flex flex-col space-y-4 h-full">
+      <div>
         <textarea
           value={expression}
           onChange={(e) => onChange(e.target.value)}
@@ -18,7 +18,7 @@ const ExpressionEditor: React.FC<ExpressionEditorProps> = ({ expression, onChang
         />
       </div>
       
-      <div className="flex-none bg-gray-50 p-3 rounded-md border">
+      <div className="bg-gray-50 p-3 rounded-md border">
         <div className="text-sm font-medium mb-1">Expression Help</div>
         <p className="text-xs text-gray-600">
           Enter your calculated column expression above. You can use functions from the left panel 
@@ -28,7 +28,7 @@ const ExpressionEditor: React.FC<ExpressionEditorProps> = ({ expression, onChang
       </div>
       
       {expression && (
-        <div className="flex-none">
+        <div>
           <div className="text-sm font-medium mb-1">Preview</div>
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
             <code className="text-xs text-blue-800 font-mono">{expression}</code>

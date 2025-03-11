@@ -2,11 +2,10 @@
 import React from 'react';
 import { Code as FunctionIcon } from 'lucide-react';
 import ExpressionBuilder from '../ExpressionBuilder';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface ExpressionTabProps {
   expression: string;
-  onExpressionChange: (expression: string) => void;
+  onExpressionChange: (value: string) => void;
 }
 
 const EXPRESSION_EXAMPLES = [
@@ -24,11 +23,11 @@ const ExpressionTab: React.FC<ExpressionTabProps> = ({
 }) => {
   return (
     <div className="grid md:grid-cols-2 gap-6">
-      <div className="overflow-hidden">
+      <div>
         <ExpressionBuilder 
           expression={expression}
           onChange={onExpressionChange}
-          className="h-[300px]"
+          className="h-[450px]"
         />
       </div>
       

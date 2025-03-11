@@ -12,7 +12,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({
   onSettingsChange
 }) => {
   return (
-    <div className="w-full">
+    <div className="w-full max-w-4xl">
       <ColumnSettings 
         settings={settings}
         onChange={onSettingsChange}
