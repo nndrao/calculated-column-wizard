@@ -1,3 +1,4 @@
+
 import { ColDef } from 'ag-grid-community';
 import { ColumnSettings, StyleSettings } from './types';
 
@@ -11,8 +12,8 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     autoHeaderHeight: settings.autoHeaderHeight
   };
 
-  // Apply header styles directly instead of using CSS classes
-  colDefUpdate.headerStyle = {
+  // Create header style object that matches what AG Grid expects
+  const headerStyleObj = {
     color: settings.headerStyle.color,
     backgroundColor: settings.headerStyle.backgroundColor,
     fontWeight: settings.headerStyle.fontWeight,
@@ -24,6 +25,9 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     borderBottom: `${settings.headerStyle.border.bottom.width}px ${settings.headerStyle.border.bottom.style} ${settings.headerStyle.border.bottom.color}`,
     borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
   };
+  
+  // Use getHeaderHeight callback to style the header
+  colDefUpdate.getHeaderCellStyle = () => headerStyleObj;
 
   colDefUpdate.cellStyle = (params: any) => {
     return {
