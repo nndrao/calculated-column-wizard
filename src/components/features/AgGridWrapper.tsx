@@ -1,3 +1,4 @@
+
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -10,11 +11,11 @@ import {
 } from 'ag-grid-community';
 import { ColumnSettingsType } from './ColumnSettings';
 
-// Import the individual modules if needed
-// Note: AllCommunityModules is not available directly, so we'll use ModuleRegistry directly
+// Import the AllCommunityModule (without the 's') as per the reference code
+import { AllCommunityModule } from 'ag-grid-community';
 
-// Register all AG Grid modules (community version already includes all necessary modules)
-// We don't need to register modules explicitly with the community version
+// Register all AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 interface AgGridWrapperProps {
   columnDefs: ColDef[];

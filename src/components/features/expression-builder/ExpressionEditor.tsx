@@ -8,7 +8,7 @@ interface ExpressionEditorProps {
 
 const ExpressionEditor: React.FC<ExpressionEditorProps> = ({ expression, onChange }) => {
   return (
-    <div className="flex flex-col space-y-4 h-full">
+    <div className="flex flex-col space-y-4 p-4 h-full">
       <div>
         <textarea
           value={expression}
