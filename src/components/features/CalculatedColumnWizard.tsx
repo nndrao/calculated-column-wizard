@@ -6,7 +6,9 @@ import {
   PencilIcon, 
   SettingsIcon, 
   FileTextIcon, 
-  InfoIcon 
+  InfoIcon,
+  Code as FunctionIcon, // Use Code as FunctionIcon
+  Table
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -60,6 +62,16 @@ const DEFAULT_SETTINGS: ColumnSettingsType = {
     items: []
   }
 };
+
+// Example of column expressions for AG-Grid
+const EXPRESSION_EXAMPLES = [
+  { label: 'Sum', example: 'row.value1 + row.value2' },
+  { label: 'Multiply', example: 'row.price * row.quantity' },
+  { label: 'Concatenate', example: '`${row.firstName} ${row.lastName}`' },
+  { label: 'Conditional', example: 'row.age > 30 ? "Senior" : "Junior"' },
+  { label: 'Format Currency', example: 'row.salary' },
+  { label: 'Calculate Percentage', example: '(row.value / row.total) * 100' }
+];
 
 const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
   onSave,
@@ -184,7 +196,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
         <CardHeader className="bg-gray-50 border-b pb-3 pt-4">
           <CardTitle className="text-lg font-medium">Calculated Column Wizard</CardTitle>
           <CardDescription>
-            Create a new calculated column based on an expression
+            Create a new calculated column based on an expression for AG-Grid
           </CardDescription>
         </CardHeader>
         
@@ -234,7 +246,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               <div className="mb-8">
                 <h3 className="text-base font-semibold mb-1">Specify Calculated Column details</h3>
                 <p className="text-sm text-muted-foreground">
-                  Define the basic information for your calculated column
+                  Define the basic information for your AG-Grid calculated column
                 </p>
               </div>
               
@@ -262,7 +274,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
                     className="input-focus-animation"
                   />
                   <p className="text-xs text-muted-foreground">
-                    The display name shown in the column header (e.g., "Calculated Price")
+                    The display name shown in the AG-Grid column header (e.g., "Calculated Price")
                   </p>
                 </div>
                 
@@ -282,14 +294,46 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               <div className="mb-8">
                 <h3 className="text-base font-semibold mb-1">Define Expression</h3>
                 <p className="text-sm text-muted-foreground">
-                  Create the expression that will calculate the column value
+                  Create the expression that will calculate the column value in AG-Grid
                 </p>
               </div>
               
-              <ExpressionBuilder 
-                expression={expression}
-                onChange={setExpression}
-              />
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <ExpressionBuilder 
+                    expression={expression}
+                    onChange={setExpression}
+                  />
+                </div>
+                
+                <div className="border rounded-md bg-gray-50 p-4">
+                  <h4 className="text-sm font-medium mb-3 flex items-center">
+                    <FunctionIcon className="w-4 h-4 mr-2" />
+                    Expression Examples
+                  </h4>
+                  
+                  <div className="space-y-3">
+                    {EXPRESSION_EXAMPLES.map((example, index) => (
+                      <div 
+                        key={index} 
+                        className="bg-white border rounded-md p-3 cursor-pointer hover:border-blue-300 transition-colors"
+                        onClick={() => setExpression(example.example)}
+                      >
+                        <div className="font-medium text-sm">{example.label}</div>
+                        <code className="text-xs font-mono block mt-1 text-gray-600">
+                          {example.example}
+                        </code>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-4 bg-blue-50 border border-blue-200 rounded-md p-3">
+                    <p className="text-xs text-blue-700">
+                      In AG-Grid expressions, use <code className="bg-blue-100 px-1 py-0.5 rounded">row.fieldName</code> to access data from other columns. The expression will be evaluated for each row.
+                    </p>
+                  </div>
+                </div>
+              </div>
             </TabsContent>
             
             <TabsContent 
@@ -299,7 +343,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               <div className="mb-8">
                 <h3 className="text-base font-semibold mb-1">Column Settings</h3>
                 <p className="text-sm text-muted-foreground">
-                  Configure how the calculated column will behave and display
+                  Configure how the calculated column will behave and display in AG-Grid
                 </p>
               </div>
               
@@ -316,7 +360,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
               <div className="mb-8">
                 <h3 className="text-base font-semibold mb-1">Summary</h3>
                 <p className="text-sm text-muted-foreground">
-                  Review your calculated column configuration
+                  Review your AG-Grid calculated column configuration
                 </p>
               </div>
               

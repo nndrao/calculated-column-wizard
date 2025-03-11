@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Check, AlertTriangle, Info } from 'lucide-react';
+import { Check, AlertTriangle, Info, Table } from 'lucide-react';
 import { ColumnSettingsType } from './ColumnSettings';
 
 interface WizardSummaryProps {
@@ -25,7 +25,10 @@ const WizardSummary: React.FC<WizardSummaryProps> = ({
   return (
     <div className={cn('border rounded-md bg-white', className)}>
       <div className="border-b px-4 py-3 bg-gray-50 rounded-t-md">
-        <h3 className="text-sm font-medium">Summary</h3>
+        <h3 className="text-sm font-medium flex items-center">
+          <Table className="w-4 h-4 mr-2" />
+          AG-Grid Column Summary
+        </h3>
       </div>
       
       <div className="p-4">
@@ -56,7 +59,7 @@ const WizardSummary: React.FC<WizardSummaryProps> = ({
               {isExpressionValid ? (
                 <>
                   <Check size={14} className="mr-1" />
-                  <span>Expression is valid</span>
+                  <span>Expression is valid for AG-Grid</span>
                 </>
               ) : (
                 <>
@@ -68,7 +71,7 @@ const WizardSummary: React.FC<WizardSummaryProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium mb-2">Settings</h4>
+            <h4 className="text-sm font-medium mb-2">AG-Grid Column Settings</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
               <div>
                 <div className="text-gray-500 mb-1">Data Type</div>
@@ -90,7 +93,7 @@ const WizardSummary: React.FC<WizardSummaryProps> = ({
           </div>
           
           <div>
-            <h4 className="text-sm font-medium mb-2">Column Properties</h4>
+            <h4 className="text-sm font-medium mb-2">AG-Grid Column Properties</h4>
             <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
               <div className="flex items-center">
                 <div className={cn(
@@ -128,7 +131,7 @@ const WizardSummary: React.FC<WizardSummaryProps> = ({
           <Info size={16} className="text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
           <div className="text-xs text-blue-700">
             This calculated column will be available in your AG-Grid instance after you save it.
-            The expression will be evaluated for each row in your dataset.
+            The expression will be evaluated for each row in your dataset using AG-Grid's valueGetter functionality.
           </div>
         </div>
       </div>
