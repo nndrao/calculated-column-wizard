@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline, Settings } from 'lucide-react';
+import { AlignCenter, AlignLeft, AlignRight, Bold, Italic, Underline, Settings, Code } from 'lucide-react';
 
 interface ColumnSettingsTabProps {
   columnDefs: ColDef[];
@@ -80,10 +80,8 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
   const [settings, setSettings] = useState<ColumnSettings>({ ...defaultColumnSettings });
   const [currentTab, setCurrentTab] = useState('general');
 
-  // Find the selected column definition
   const selectedColDef = columnDefs.find(col => col.field === selectedField);
 
-  // Initialize settings when column selection changes
   React.useEffect(() => {
     if (selectedColDef) {
       setSettings({
@@ -94,7 +92,7 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
         cellStyle: { ...defaultStyleSettings },
         valueFormatter: 'default',
         customFormatter: '',
-        editable: selectedColDef.editable === true, // Fix for TypeScript error
+        editable: selectedColDef.editable === true,
         cellEditor: selectedColDef.cellEditor || 'default',
         cellRenderer: selectedColDef.cellRenderer || 'default'
       });
@@ -106,7 +104,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
   const handleSaveChanges = () => {
     if (!selectedField || !onUpdateColumnDef) return;
 
-    // Prepare the column definition update
     const colDefUpdate: Partial<ColDef> = {
       headerName: settings.headerName,
       headerTooltip: settings.headerTooltip,
@@ -114,7 +111,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       editable: settings.editable
     };
 
-    // Apply header styles as cellStyle
     const headerStyle = {
       fontWeight: settings.headerStyle.fontWeight,
       fontStyle: settings.headerStyle.fontStyle,
@@ -128,7 +124,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
     };
 
-    // Apply cell styles
     const cellStyle = {
       fontWeight: settings.cellStyle.fontWeight,
       fontStyle: settings.cellStyle.fontStyle,
@@ -142,14 +137,11 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       borderLeft: `${settings.cellStyle.border.left.width}px ${settings.cellStyle.border.left.style} ${settings.cellStyle.border.left.color}`
     };
 
-    // Apply styles correctly (fix TypeScript error)
     colDefUpdate.headerClass = 'custom-header';
     colDefUpdate.cellClass = 'custom-cell';
     
-    // Use correct type for cellStyle and headerStyle
     colDefUpdate.cellStyle = cellStyle;
     
-    // Handle headerStyle as a function to avoid type errors
     colDefUpdate.headerComponentParams = {
       template: 
         `<div class="ag-header-cell-label" style="
@@ -166,7 +158,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
         "><span ref="eText" class="ag-header-cell-text"></span></div>`
     };
 
-    // Apply value formatter
     if (settings.valueFormatter !== 'default') {
       if (settings.valueFormatter === 'number') {
         colDefUpdate.valueFormatter = (params) => {
@@ -186,7 +177,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
         };
       } else if (settings.valueFormatter === 'custom' && settings.customFormatter) {
         try {
-          // This is a simplified implementation of custom formatter
           colDefUpdate.valueFormatter = (params) => {
             const formatterFn = new Function('value', 'data', 'column', `return ${settings.customFormatter}`);
             return formatterFn(params.value, params.data, params.column);
@@ -197,7 +187,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       }
     }
 
-    // Apply cell editor and renderer
     if (settings.cellEditor !== 'default') {
       colDefUpdate.cellEditor = settings.cellEditor;
     }
@@ -206,7 +195,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
       colDefUpdate.cellRenderer = settings.cellRenderer;
     }
 
-    // Save changes
     onUpdateColumnDef(selectedField, colDefUpdate);
   };
 
@@ -248,7 +236,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
   if (selectedField) {
     return (
       <div className="flex h-full overflow-hidden">
-        {/* Column Selection Panel */}
         <div className="w-60 border-r overflow-y-auto bg-gray-50 p-4">
           <h3 className="font-medium text-sm mb-3">Available Columns</h3>
           <div className="space-y-1">
@@ -268,7 +255,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
           </div>
         </div>
 
-        {/* Settings Content Area */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
@@ -280,20 +266,14 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
               </Button>
             </div>
 
-            {/* Move tabs to the top */}
-            <div className="mt-2">
-              <div className="border-b">
-                <Tabs value={currentTab} onValueChange={setCurrentTab}>
-                  <TabsList className="w-full flex justify-start">
-                    <TabsTrigger value="general">General</TabsTrigger>
-                    <TabsTrigger value="header">Header Style</TabsTrigger>
-                    <TabsTrigger value="cell">Cell Style</TabsTrigger>
-                    <TabsTrigger value="format">Formatting</TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div>
+            <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+              <TabsList className="w-full justify-start mb-6">
+                <TabsTrigger value="general">General</TabsTrigger>
+                <TabsTrigger value="header">Header Style</TabsTrigger>
+                <TabsTrigger value="cell">Cell Style</TabsTrigger>
+                <TabsTrigger value="format">Formatting</TabsTrigger>
+              </TabsList>
 
-              {/* General Settings */}
               {currentTab === 'general' && (
                 <div className="space-y-4 mt-4">
                   <div className="space-y-2">
@@ -340,7 +320,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
                 </div>
               )}
 
-              {/* Header Style Settings */}
               {currentTab === 'header' && (
                 <div className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -499,7 +478,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
                 </div>
               )}
 
-              {/* Cell Style Settings */}
               {currentTab === 'cell' && (
                 <div className="space-y-4 mt-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -658,7 +636,6 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
                 </div>
               )}
 
-              {/* Formatting and Other Settings */}
               {currentTab === 'format' && (
                 <div className="space-y-4 mt-4">
                   <div className="space-y-2">
@@ -740,7 +717,7 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
                   </div>
                 </div>
               )}
-            </div>
+            </Tabs>
           </div>
         </div>
       </div>
@@ -761,3 +738,4 @@ const ColumnSettingsTab: React.FC<ColumnSettingsTabProps> = ({
 };
 
 export default ColumnSettingsTab;
+

@@ -145,7 +145,7 @@ const SettingsDialog: React.FC<SettingsDialogProps> = ({
             <p className="text-sm text-gray-500 mt-1">Configure your data grid with calculated columns and display settings</p>
           </DialogHeader>
           
-          {/* Move tabs to the top level as shown in the image */}
+          {/* Tabs moved to the top level */}
           <div className="border-b bg-white flex-shrink-0">
             <TabsList className="h-10 px-4 w-full justify-start rounded-none bg-transparent">
               <TabsTrigger 
