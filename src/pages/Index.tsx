@@ -1,5 +1,5 @@
+
 import React, { useState, useEffect } from 'react';
-import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 import CalculatedColumnWizard from '@/components/features/CalculatedColumnWizard';
 import AgGridWrapper from '@/components/features/AgGridWrapper';
@@ -38,14 +38,9 @@ const sampleRowData = [
 ];
 
 const Index = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [columns, setColumns] = useState<CalculatedColumn[]>([]);
   const [showWizard, setShowWizard] = useState(false);
   const [editingColumn, setEditingColumn] = useState<CalculatedColumn | null>(null);
-  
-  const handleToggleSidebar = () => {
-    setSidebarCollapsed(prev => !prev);
-  };
   
   const handleSaveColumn = (column: CalculatedColumn) => {
     let fixedExpression = column.expression;
@@ -104,81 +99,74 @@ const Index = () => {
   };
   
   return (
-    <div className="flex min-h-screen bg-gray-50 overflow-hidden">
-      <Sidebar 
-        collapsed={sidebarCollapsed} 
-        onToggle={handleToggleSidebar}
+    <div className="flex flex-col min-h-screen bg-gray-50 overflow-hidden">
+      <Header 
+        title="Calculated Column"
+        subtitle="Create and manage calculated columns for your AG-Grid"
+        onNew={handleNewColumn}
+        onEdit={handleEditColumn}
+        onDelete={handleDeleteColumn}
       />
       
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Header 
-          title="Calculated Column"
-          subtitle="Create and manage calculated columns for your AG-Grid"
-          onNew={handleNewColumn}
-          onEdit={handleEditColumn}
-          onDelete={handleDeleteColumn}
-        />
-        
-        <main className="flex-1 overflow-auto p-6">
-          <div className="max-w-7xl mx-auto space-y-6">
-            {!showWizard ? (
-              <>
+      <main className="flex-1 overflow-auto p-6">
+        <div className="max-w-7xl mx-auto space-y-6">
+          {!showWizard ? (
+            <>
+              <div className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
+                <h2 className="text-lg font-medium mb-4">AG-Grid with Calculated Columns</h2>
+                <AgGridWrapper 
+                  columnDefs={sampleColumnDefs}
+                  rowData={sampleRowData}
+                  calculatedColumns={columns}
+                />
+              </div>
+              
+              {columns.length > 0 && (
                 <div className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
-                  <h2 className="text-lg font-medium mb-4">AG-Grid with Calculated Columns</h2>
-                  <AgGridWrapper 
-                    columnDefs={sampleColumnDefs}
-                    rowData={sampleRowData}
-                    calculatedColumns={columns}
-                  />
-                </div>
-                
-                {columns.length > 0 && (
-                  <div className="bg-white p-4 rounded-md shadow-sm border border-gray-200">
-                    <h2 className="text-lg font-medium mb-4">Calculated Columns</h2>
-                    <div className="space-y-2">
-                      {columns.map((column, index) => (
-                        <div key={column.columnId} className="p-3 border rounded-md flex justify-between items-center">
-                          <div>
-                            <p className="font-medium">{column.columnName}</p>
-                            <p className="text-sm text-gray-500">ID: {column.columnId}</p>
-                            <p className="text-xs font-mono mt-1">{column.expression}</p>
-                          </div>
-                          <div className="flex gap-2">
-                            <button 
-                              className="text-blue-600 hover:underline text-sm"
-                              onClick={() => {
-                                setEditingColumn(column);
-                                setShowWizard(true);
-                              }}
-                            >
-                              Edit
-                            </button>
-                            <button 
-                              className="text-red-600 hover:underline text-sm"
-                              onClick={() => {
-                                setColumns(columns.filter((_, i) => i !== index));
-                                toast.success("Column deleted");
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </div>
+                  <h2 className="text-lg font-medium mb-4">Calculated Columns</h2>
+                  <div className="space-y-2">
+                    {columns.map((column, index) => (
+                      <div key={column.columnId} className="p-3 border rounded-md flex justify-between items-center">
+                        <div>
+                          <p className="font-medium">{column.columnName}</p>
+                          <p className="text-sm text-gray-500">ID: {column.columnId}</p>
+                          <p className="text-xs font-mono mt-1">{column.expression}</p>
                         </div>
-                      ))}
-                    </div>
+                        <div className="flex gap-2">
+                          <button 
+                            className="text-blue-600 hover:underline text-sm"
+                            onClick={() => {
+                              setEditingColumn(column);
+                              setShowWizard(true);
+                            }}
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            className="text-red-600 hover:underline text-sm"
+                            onClick={() => {
+                              setColumns(columns.filter((_, i) => i !== index));
+                              toast.success("Column deleted");
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </>
-            ) : (
-              <CalculatedColumnWizard 
-                onSave={handleSaveColumn}
-                onCancel={handleCancelWizard}
-                initialData={editingColumn || undefined}
-              />
-            )}
-          </div>
-        </main>
-      </div>
+                </div>
+              )}
+            </>
+          ) : (
+            <CalculatedColumnWizard 
+              onSave={handleSaveColumn}
+              onCancel={handleCancelWizard}
+              initialData={editingColumn || undefined}
+            />
+          )}
+        </div>
+      </main>
     </div>
   );
 };
