@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { 
@@ -8,7 +7,7 @@ import {
   Plus,
   Minus,
   X,
-  Function as FunctionIcon,
+  Code as FunctionIcon,
   Hash,
   Calendar,
   Type,
