@@ -9,12 +9,12 @@ interface ExpressionTabProps {
 }
 
 const EXPRESSION_EXAMPLES = [
-  { label: 'Sum', example: 'row.value1 + row.value2' },
-  { label: 'Multiply', example: 'row.price * row.quantity' },
-  { label: 'Concatenate', example: '`${row.firstName} ${row.lastName}`' },
-  { label: 'Conditional', example: 'row.age > 30 ? "Senior" : "Junior"' },
-  { label: 'Format Currency', example: 'row.salary' },
-  { label: 'Calculate Percentage', example: '(row.value / row.total) * 100' }
+  { label: 'Add Constant', example: '[salary] + 10000' },
+  { label: 'Multiply', example: '[salary] * 1.1' },
+  { label: 'Concatenate', example: '"$" + [salary]' },
+  { label: 'Conditional', example: '[age] > 30 ? "Senior" : "Junior"' },
+  { label: 'Calculate Percentage', example: '([salary] / 100000) * 100' },
+  { label: 'Full Name', example: '[firstName] + " " + [lastName]' }
 ];
 
 const ExpressionTab: React.FC<ExpressionTabProps> = ({
@@ -54,7 +54,7 @@ const ExpressionTab: React.FC<ExpressionTabProps> = ({
         
         <div className="mt-4 bg-blue-50 border border-blue-200 rounded-md p-3">
           <p className="text-xs text-blue-700">
-            In AG-Grid expressions, use <code className="bg-blue-100 px-1 py-0.5 rounded">row.fieldName</code> to access data from other columns. The expression will be evaluated for each row.
+            Use square brackets to reference column fields like <code className="bg-blue-100 px-1 py-0.5 rounded">[salary]</code>. The expression will be evaluated for each row.
           </p>
         </div>
       </div>

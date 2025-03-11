@@ -27,35 +27,28 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
 
   const evaluateExpression = (expression: string, row: any) => {
     try {
-      // Replace field references [fieldName] with actual values
-      let processedExpression = expression.replace(/\[(\w+)\]/g, (_, field) => {
+      // Replace field references with proper string representation of field values
+      let processedExpression = expression.replace(/\[(\w+)\]/g, (substring, field) => {
         const value = row[field];
-        // Ensure numeric values are treated as numbers
-        return typeof value === 'number' ? value : `"${value}"`;
+        if (value === undefined || value === null) {
+          return 'null';
+        }
+        // Keep numeric values as is, quote strings
+        return typeof value === 'number' ? String(value) : `"${value}"`;
       });
 
       // Create a safe evaluation context
-      const evalContext = {
-        row,
-        processedExpression,
-        result: null
-      };
-
-      // Create and execute the function with numeric operations
-      const evalFn = new Function('context', `
-        with (context) {
-          try {
-            result = ${processedExpression};
-            return result;
-          } catch (e) {
-            console.error("Expression evaluation error:", e);
-            return null;
-          }
+      const evalFn = new Function('row', `
+        try {
+          return ${processedExpression};
+        } catch (e) {
+          console.error("Expression evaluation error:", e);
+          return null;
         }
       `);
 
-      const result = evalFn(evalContext);
-      return result !== undefined ? result : null;
+      const result = evalFn(row);
+      return result;
     } catch (error) {
       console.error("Expression processing error:", error);
       return null;
