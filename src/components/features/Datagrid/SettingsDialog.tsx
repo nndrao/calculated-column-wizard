@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ColDef } from 'ag-grid-community';
 import { ColumnSettingsType } from '../ColumnSettings';
 import ColumnSettingsTab from './ColumnSettingsTab';
