@@ -8,6 +8,7 @@ import {
   FileTextIcon 
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Card,
   CardContent,
@@ -162,7 +163,7 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
   return (
     <div className={cn('wizard-container flex flex-col h-full', className)}>
       <Card className="flex-1 shadow-sm border border-gray-200 flex flex-col h-full overflow-hidden">
-        <CardHeader className="bg-gray-50 border-b pb-3 pt-4 flex-shrink-0">
+        <CardHeader className="bg-gray-50 border-b pb-3 pt-4 flex-none">
           <CardTitle className="text-lg font-medium">Calculated Column Wizard</CardTitle>
           <CardDescription>
             Create a new calculated column based on an expression for AG-Grid
@@ -172,9 +173,9 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
         <Tabs 
           value={activeTab} 
           onValueChange={handleTabChange}
-          className="flex-1 flex flex-col min-h-0"
+          className="flex-1 flex flex-col overflow-hidden"
         >
-          <div className="border-b flex-shrink-0">
+          <div className="border-b flex-none">
             <TabsList className="flex w-full justify-start rounded-none border-b border-0 p-0">
               <TabsTrigger 
                 value="type" 
@@ -207,62 +208,64 @@ const CalculatedColumnWizard: React.FC<CalculatedColumnWizardProps> = ({
             </TabsList>
           </div>
           
-          <CardContent className="flex-1 overflow-auto p-6">
-            <TabsContent 
-              value="type" 
-              className="mt-0 h-full space-y-6 animate-fade-in data-[state=inactive]:animate-fade-out"
-            >
-              <TypeTab
-                columnId={columnId}
-                columnName={columnName}
-                onColumnIdChange={setColumnId}
-                onColumnNameChange={setColumnName}
-              />
-            </TabsContent>
+          <div className="flex-1 overflow-hidden flex flex-col">
+            <ScrollArea className="flex-1 px-6 py-6">
+              <TabsContent 
+                value="type" 
+                className="mt-0 animate-fade-in data-[state=inactive]:animate-fade-out"
+              >
+                <TypeTab
+                  columnId={columnId}
+                  columnName={columnName}
+                  onColumnIdChange={setColumnId}
+                  onColumnNameChange={setColumnName}
+                />
+              </TabsContent>
+              
+              <TabsContent 
+                value="expression" 
+                className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
+              >
+                <ExpressionTab
+                  expression={expression}
+                  onExpressionChange={setExpression}
+                />
+              </TabsContent>
+              
+              <TabsContent 
+                value="settings" 
+                className="mt-0 animate-fade-in data-[state=inactive]:animate-fade-out"
+              >
+                <SettingsTab
+                  settings={settings}
+                  onSettingsChange={setSettings}
+                />
+              </TabsContent>
+              
+              <TabsContent 
+                value="summary" 
+                className="mt-0 animate-fade-in data-[state=inactive]:animate-fade-out"
+              >
+                <SummaryTab
+                  columnId={columnId}
+                  columnName={columnName}
+                  expression={expression}
+                  settings={settings}
+                />
+              </TabsContent>
+            </ScrollArea>
             
-            <TabsContent 
-              value="expression" 
-              className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
-            >
-              <ExpressionTab
-                expression={expression}
-                onExpressionChange={setExpression}
+            <CardFooter className="p-0 flex-none border-t bg-gray-50">
+              <WizardFooter
+                activeTab={activeTab}
+                onBack={handleBack}
+                onNext={handleNext}
+                onCancel={onCancel || (() => {})}
+                onSave={handleSave}
               />
-            </TabsContent>
-            
-            <TabsContent 
-              value="settings" 
-              className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
-            >
-              <SettingsTab
-                settings={settings}
-                onSettingsChange={setSettings}
-              />
-            </TabsContent>
-            
-            <TabsContent 
-              value="summary" 
-              className="mt-0 h-full animate-fade-in data-[state=inactive]:animate-fade-out"
-            >
-              <SummaryTab
-                columnId={columnId}
-                columnName={columnName}
-                expression={expression}
-                settings={settings}
-              />
-            </TabsContent>
-          </CardContent>
+            </CardFooter>
+          </div>
         </Tabs>
-        
-        <CardFooter className="p-0 flex-shrink-0 border-t bg-gray-50">
-          <WizardFooter
-            activeTab={activeTab}
-            onBack={handleBack}
-            onNext={handleNext}
-            onCancel={onCancel || (() => {})}
-            onSave={handleSave}
-          />
-        </CardFooter>
       </Card>
     </div>
   );

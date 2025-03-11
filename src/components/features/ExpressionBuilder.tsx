@@ -37,7 +37,7 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
         <h3 className="text-sm font-medium">Expression Builder</h3>
       </div>
       
-      <div className="flex min-h-0 flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden">
         <div className="w-64 border-r flex-none">
           <Tabs defaultValue="functions" className="h-full flex flex-col">
             <TabsList className="grid grid-cols-2 mx-2 mt-2 mb-0 flex-none">
@@ -68,10 +68,12 @@ const ExpressionBuilder: React.FC<ExpressionBuilderProps> = ({
             </Button>
           </div>
           
-          <ExpressionEditor 
-            expression={expression} 
-            onChange={onChange} 
-          />
+          <div className="flex-1 overflow-hidden">
+            <ExpressionEditor 
+              expression={expression} 
+              onChange={onChange} 
+            />
+          </div>
         </div>
       </div>
     </div>
