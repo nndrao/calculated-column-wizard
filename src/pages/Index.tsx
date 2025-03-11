@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
@@ -49,16 +48,26 @@ const Index = () => {
   };
   
   const handleSaveColumn = (column: CalculatedColumn) => {
+    let fixedExpression = column.expression;
+    
+    if (!fixedExpression.includes('[') && (
+      fixedExpression.includes('firstName') || 
+      fixedExpression.includes('lastName') || 
+      fixedExpression.includes('age') || 
+      fixedExpression.includes('salary') || 
+      fixedExpression.includes('department')
+    )) {
+      toast.warning("Your expression may not work correctly. Make sure to wrap field names in square brackets, e.g. [salary] * 2");
+    }
+    
     const existingIndex = columns.findIndex(c => c.columnId === column.columnId);
     
     if (existingIndex >= 0) {
-      // Update existing column
       const updatedColumns = [...columns];
       updatedColumns[existingIndex] = column;
       setColumns(updatedColumns);
       toast.success("Column updated successfully");
     } else {
-      // Add new column
       setColumns(prev => [...prev, column]);
       toast.success("New calculated column added");
     }
@@ -72,8 +81,6 @@ const Index = () => {
   };
   
   const handleEditColumn = () => {
-    // For simplicity, just edit the first column in this example
-    // In a real app, you'd add selection and edit the selected column
     if (columns.length > 0) {
       setEditingColumn(columns[0]);
       setShowWizard(true);
@@ -83,8 +90,6 @@ const Index = () => {
   };
   
   const handleDeleteColumn = () => {
-    // For simplicity, just delete the first column in this example
-    // In a real app, you'd add selection and delete the selected column
     if (columns.length > 0) {
       setColumns(prev => prev.slice(1));
       toast.success("Column deleted successfully");

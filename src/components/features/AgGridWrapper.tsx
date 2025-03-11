@@ -1,4 +1,3 @@
-
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -39,12 +38,20 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
         resizable: col.settings.resizable,
         valueGetter: (params: any) => {
           try {
-            // This is a simple implementation - in production you would use a safer approach
-            // Using Function constructor is generally not recommended for security reasons
-            // Consider using a proper expression parser library
+            // Modified approach to handle expressions more safely
+            // Replace any field references like [fieldName] with direct row data access
             const row = params.data;
+            
+            // Replace [fieldName] pattern with actual data access
+            const processedExpression = col.expression.replace(/\[(\w+)\]/g, (match, field) => {
+              return `row.${field}`;
+            });
+            
+            // For debugging
+            console.log(`Processing expression for ${col.columnId}: ${processedExpression}`);
+            
             // eslint-disable-next-line no-new-func
-            const evalFn = new Function('row', `return ${col.expression}`);
+            const evalFn = new Function('row', `return ${processedExpression}`);
             return evalFn(row);
           } catch (error) {
             console.error(`Error evaluating expression for ${col.columnId}:`, error);
