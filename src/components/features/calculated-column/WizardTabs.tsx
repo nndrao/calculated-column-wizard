@@ -20,6 +20,7 @@ const WizardTabs: React.FC<WizardTabsProps> = ({ activeTab, onTabChange }) => {
         <TabsTrigger 
           value="type" 
           className="data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent px-4 py-3"
+          onClick={() => onTabChange('type')}
         >
           <TypeIcon className="mr-2 h-4 w-4" />
           Type
@@ -27,6 +28,7 @@ const WizardTabs: React.FC<WizardTabsProps> = ({ activeTab, onTabChange }) => {
         <TabsTrigger 
           value="expression" 
           className="data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent px-4 py-3"
+          onClick={() => onTabChange('expression')}
         >
           <PencilIcon className="mr-2 h-4 w-4" />
           Expression
@@ -34,6 +36,7 @@ const WizardTabs: React.FC<WizardTabsProps> = ({ activeTab, onTabChange }) => {
         <TabsTrigger 
           value="settings" 
           className="data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent px-4 py-3"
+          onClick={() => onTabChange('settings')}
         >
           <SettingsIcon className="mr-2 h-4 w-4" />
           Settings
@@ -41,6 +44,7 @@ const WizardTabs: React.FC<WizardTabsProps> = ({ activeTab, onTabChange }) => {
         <TabsTrigger 
           value="summary" 
           className="data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none border-b-2 border-transparent px-4 py-3"
+          onClick={() => onTabChange('summary')}
         >
           <FileTextIcon className="mr-2 h-4 w-4" />
           Summary

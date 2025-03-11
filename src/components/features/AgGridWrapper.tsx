@@ -1,4 +1,3 @@
-
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -9,13 +8,7 @@ import {
   GridApi,
   ModuleRegistry
 } from 'ag-grid-community';
-import { ColumnSettingsType } from '../ColumnSettings';
-
-// Import the AllCommunityModules (with an 's') as per the correct AG-Grid package
-import { AllCommunityModules } from 'ag-grid-community';
-
-// Register all AG Grid modules
-ModuleRegistry.registerModules(AllCommunityModules);
+import { ColumnSettingsType } from './ColumnSettings';
 
 interface AgGridWrapperProps {
   columnDefs: ColDef[];
