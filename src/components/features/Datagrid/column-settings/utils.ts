@@ -26,13 +26,13 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
   };
   
-  // Use headerClass with a function that returns a style object
+  // Use headerComponentParams to include a template with flex styling
   colDefUpdate.headerComponentParams = { 
     template: `<div style="height: 100%; display: flex; align-items: center;"></div>` 
   };
   
-  // Set the appropriate styling method for headers in AG Grid
-  colDefUpdate.headerStyle = headerStyleObj;
+  // Use the AG Grid supported method for styling headers
+  colDefUpdate.getHeaderCellStyle = () => headerStyleObj;
 
   colDefUpdate.cellStyle = (params: any) => {
     return {
