@@ -1,4 +1,3 @@
-
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -118,28 +117,32 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     setGridApi(params.api);
     params.api.sizeColumnsToFit();
     
-    // Add custom CSS for styling headers and cells properly
     const styleElement = document.createElement('style');
     styleElement.textContent = `
       .ag-header-cell {
         transition: background-color 0.3s, color 0.3s;
       }
-      .custom-header {
+      .ag-header-cell-comp-wrapper {
+        height: 100%;
+        width: 100%;
+      }
+      .ag-header-cell-label {
+        width: 100%;
+        height: 100%;
+      }
+      .ag-header-cell-text {
+        width: 100%;
+      }
+      .ag-header-cell .ag-header-cell-label {
+        color: inherit;
+        background-color: inherit;
         font-weight: inherit;
         font-style: inherit;
         text-decoration: inherit;
         text-align: inherit;
-        color: inherit;
-        background-color: inherit;
       }
-      .custom-cell {
-        transition: background-color 0.3s;
-      }
-      .custom-cell:hover {
-        background-color: rgba(0, 0, 0, 0.1) !important;
-      }
-      .ag-header-cell-comp-wrapper {
-        height: 100%;
+      .ag-cell:hover {
+        background-color: rgba(0, 0, 0, 0.05) !important;
       }
     `;
     document.head.appendChild(styleElement);
@@ -158,6 +161,7 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
         onGridReady={onGridReady}
         animateRows={true}
         rowSelection="multiple"
+        suppressDragLeaveHidesColumns={true}
         defaultColDef={{
           flex: 1,
           minWidth: 100,
