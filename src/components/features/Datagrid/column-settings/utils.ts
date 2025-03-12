@@ -1,3 +1,4 @@
+
 import { ColDef } from 'ag-grid-community';
 import { ColumnSettings, StyleSettings } from './types';
 
@@ -25,9 +26,14 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
   };
 
-  // Apply header styles directly using headerComponentParams
+  // Apply header styles through both methods to ensure compatibility
   colDefUpdate.headerComponentParams = {
     style: headerStyleObj
+  };
+  
+  // Add direct header style as a function to ensure it overrides default styles
+  colDefUpdate.headerClass = (params) => {
+    return 'custom-header-cell';
   };
 
   // Add cell styling

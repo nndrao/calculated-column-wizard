@@ -1,3 +1,4 @@
+
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -119,33 +120,68 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     
     const styleElement = document.createElement('style');
     styleElement.textContent = `
+      /* Base header styling */
       .ag-header-cell {
         transition: background-color 0.3s, color 0.3s;
       }
-      .ag-header-cell-comp-wrapper {
+      
+      /* Custom header styling */
+      .custom-header-cell {
+        display: flex;
         height: 100%;
         width: 100%;
       }
-      .ag-header-cell-label {
+      
+      /* Ensure all nested elements inherit styles */
+      .custom-header-cell .ag-header-cell-label,
+      .custom-header-cell .ag-header-cell-text,
+      .custom-header-cell .ag-header-cell-comp-wrapper {
         width: 100%;
         height: 100%;
+        color: inherit !important;
+        background-color: inherit !important;
+        font-weight: inherit !important;
+        font-style: inherit !important;
+        text-decoration: inherit !important;
+        text-align: inherit !important;
       }
-      .ag-header-cell-text {
-        width: 100%;
+      
+      /* Force direct styling on header elements */
+      .ag-header-cell .ag-header-cell-label,
+      .ag-header-cell .ag-header-cell-comp-wrapper,
+      .ag-header-cell .ag-header-cell-text {
+        color: inherit !important;
+        background-color: inherit !important;
+        font-weight: inherit !important;
+        font-style: inherit !important;
+        text-decoration: inherit !important;
+        text-align: inherit !important;
       }
-      .ag-header-cell .ag-header-cell-label {
-        color: inherit;
-        background-color: inherit;
-        font-weight: inherit;
-        font-style: inherit;
-        text-decoration: inherit;
-        text-align: inherit;
-      }
+      
+      /* Cell hover effect */
       .ag-cell:hover {
         background-color: rgba(0, 0, 0, 0.05) !important;
       }
+      
+      /* Override any inline styles that might be interfering */
+      .ag-header-cell[style] {
+        /* !important flag to override inline styles */
+        color: inherit !important;
+        background-color: inherit !important;
+        font-weight: inherit !important;
+        font-style: inherit !important;
+        text-decoration: inherit !important;
+        text-align: inherit !important;
+      }
     `;
     document.head.appendChild(styleElement);
+    
+    // Force refresh of headers after a short delay to ensure styles are applied
+    setTimeout(() => {
+      if (gridApi) {
+        gridApi.refreshHeader();
+      }
+    }, 100);
     
     if (externalGridReadyHandler) {
       externalGridReadyHandler(params);
