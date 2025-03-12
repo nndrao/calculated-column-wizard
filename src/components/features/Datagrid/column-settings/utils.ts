@@ -31,8 +31,11 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     template: `<div style="height: 100%; display: flex; align-items: center;"></div>` 
   };
   
-  // Use the AG Grid supported method for styling headers
-  colDefUpdate.getHeaderCellStyle = () => headerStyleObj;
+  // Use headerClass to apply styles
+  colDefUpdate.headerClass = 'custom-header';
+  
+  // Use a compatible property for column header styling in AG Grid
+  colDefUpdate.headerStyle = headerStyleObj;
 
   colDefUpdate.cellStyle = (params: any) => {
     return {
