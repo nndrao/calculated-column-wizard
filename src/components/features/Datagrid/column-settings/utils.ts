@@ -1,4 +1,3 @@
-
 import { ColDef } from 'ag-grid-community';
 import { ColumnSettings, StyleSettings } from './types';
 
@@ -26,16 +25,14 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
   };
   
-  // Use headerComponentParams to include a template with flex styling
+  // Use headerComponentParams to include styling for the header
   colDefUpdate.headerComponentParams = { 
-    template: `<div style="height: 100%; display: flex; align-items: center;"></div>` 
+    template: `<div style="height: 100%; display: flex; align-items: center;"></div>`,
+    style: headerStyleObj
   };
   
   // Use headerClass to apply styles
   colDefUpdate.headerClass = 'custom-header';
-  
-  // Use a compatible property for column header styling in AG Grid
-  colDefUpdate.headerStyle = headerStyleObj;
 
   colDefUpdate.cellStyle = (params: any) => {
     return {
