@@ -1,3 +1,4 @@
+
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -117,28 +118,31 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     setGridApi(params.api);
     params.api.sizeColumnsToFit();
     
-    const gridElement = document.querySelector('.ag-theme-alpine');
-    if (gridElement) {
-      const styleElement = document.createElement('style');
-      styleElement.textContent = `
-        .ag-header-cell {
-          transition: background-color 0.3s, color 0.3s;
-        }
-        .custom-header {
-          background-color: #f8f9fa;
-        }
-        .custom-cell {
-          transition: background-color 0.3s;
-        }
-        .custom-cell:hover {
-          background-color: rgba(0, 0, 0, 0.1) !important;
-        }
-        .sport-header {
-          background-color: lightgreen !important;
-        }
-      `;
-      document.head.appendChild(styleElement);
-    }
+    // Add custom CSS for styling headers and cells properly
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+      .ag-header-cell {
+        transition: background-color 0.3s, color 0.3s;
+      }
+      .custom-header {
+        font-weight: inherit;
+        font-style: inherit;
+        text-decoration: inherit;
+        text-align: inherit;
+        color: inherit;
+        background-color: inherit;
+      }
+      .custom-cell {
+        transition: background-color 0.3s;
+      }
+      .custom-cell:hover {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+      }
+      .ag-header-cell-comp-wrapper {
+        height: 100%;
+      }
+    `;
+    document.head.appendChild(styleElement);
     
     if (externalGridReadyHandler) {
       externalGridReadyHandler(params);
