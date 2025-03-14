@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Code } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 interface FormatTabProps {
   settings: ColumnSettings;
@@ -88,6 +89,36 @@ const FormatTab: React.FC<FormatTabProps> = ({ settings, setSettings }) => {
             <SelectItem value="agAnimateSlideCellRenderer">Animate Slide</SelectItem>
             <SelectItem value="agGroupCellRenderer">Group Cell</SelectItem>
             <SelectItem value="agSparklineCellRenderer">Sparkline</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center space-x-2 pt-4">
+        <Switch
+          id="floatingFilter"
+          checked={settings.floatingFilter ?? true}
+          onCheckedChange={(checked) => 
+            setSettings({ ...settings, floatingFilter: checked })
+          }
+        />
+        <Label htmlFor="floatingFilter">Enable Floating Filter</Label>
+      </div>
+
+      <div className="pt-4">
+        <Label>Filter Type</Label>
+        <Select
+          value={settings.filterType || 'agMultiColumnFilter'}
+          onValueChange={(value) => setSettings({ ...settings, filterType: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select filter type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="agMultiColumnFilter">Multi Column Filter</SelectItem>
+            <SelectItem value="agTextColumnFilter">Text Filter</SelectItem>
+            <SelectItem value="agNumberColumnFilter">Number Filter</SelectItem>
+            <SelectItem value="agDateColumnFilter">Date Filter</SelectItem>
+            <SelectItem value="agSetColumnFilter">Set Filter</SelectItem>
           </SelectContent>
         </Select>
       </div>

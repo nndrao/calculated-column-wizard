@@ -76,7 +76,8 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
       width: col.settings.width,
       editable: col.settings.editable,
       sortable: col.settings.sortable,
-      filter: col.settings.filterable,
+      filter: 'agMultiColumnFilter',
+      floatingFilter: true,
       resizable: col.settings.resizable,
       valueGetter: (params: any) => {
         return evaluateExpression(col.expression, params.data);
@@ -120,42 +121,47 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     
     const styleElement = document.createElement('style');
     styleElement.textContent = `
-      /* Base header styling */
+      /* AG Grid Header Styling */
       .ag-header-cell {
         transition: background-color 0.3s, color 0.3s;
       }
       
-      /* Custom header styling */
-      .custom-header-cell {
+      /* Make sure header styles are properly inherited */
+      .ag-header-cell-label {
+        color: inherit !important;
+        background-color: inherit !important;
+        font-weight: inherit !important;
+        font-style: inherit !important;
+        text-decoration: inherit !important;
+        text-align: inherit !important;
+        height: 100%;
+        width: 100%;
         display: flex;
+        align-items: center;
+      }
+      
+      /* Ensure text in header gets the styles */
+      .ag-header-cell-text {
+        color: inherit !important;
+      }
+      
+      /* Style header comp wrapper */
+      .ag-header-cell-comp-wrapper {
         height: 100%;
         width: 100%;
       }
       
-      /* Ensure all nested elements inherit styles */
-      .custom-header-cell .ag-header-cell-label,
-      .custom-header-cell .ag-header-cell-text,
-      .custom-header-cell .ag-header-cell-comp-wrapper {
-        width: 100%;
-        height: 100%;
-        color: inherit !important;
-        background-color: inherit !important;
-        font-weight: inherit !important;
-        font-style: inherit !important;
-        text-decoration: inherit !important;
-        text-align: inherit !important;
+      /* Multi-column filter styling */
+      .ag-multi-filter {
+        padding: 0 !important;
       }
       
-      /* Force direct styling on header elements */
-      .ag-header-cell .ag-header-cell-label,
-      .ag-header-cell .ag-header-cell-comp-wrapper,
-      .ag-header-cell .ag-header-cell-text {
-        color: inherit !important;
-        background-color: inherit !important;
-        font-weight: inherit !important;
-        font-style: inherit !important;
-        text-decoration: inherit !important;
-        text-align: inherit !important;
+      .ag-floating-filter-body {
+        height: 100%;
+      }
+      
+      .ag-floating-filter-button {
+        margin-left: 4px;
       }
       
       /* Cell hover effect */
@@ -163,9 +169,11 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
         background-color: rgba(0, 0, 0, 0.05) !important;
       }
       
-      /* Override any inline styles that might be interfering */
-      .ag-header-cell[style] {
-        /* !important flag to override inline styles */
+      /* Force column header styles to apply */
+      .ag-header-cell, 
+      .ag-header-group-cell,
+      .ag-header-cell[style],
+      .ag-header-group-cell[style] {
         color: inherit !important;
         background-color: inherit !important;
         font-weight: inherit !important;
@@ -176,12 +184,12 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
     `;
     document.head.appendChild(styleElement);
     
-    // Force refresh of headers after a short delay to ensure styles are applied
+    // Force refresh of headers
     setTimeout(() => {
-      if (gridApi) {
-        gridApi.refreshHeader();
+      if (params.api) {
+        params.api.refreshHeader();
       }
-    }, 100);
+    }, 200);
     
     if (externalGridReadyHandler) {
       externalGridReadyHandler(params);
@@ -202,7 +210,8 @@ const AgGridWrapper: React.FC<AgGridWrapperProps> = ({
           flex: 1,
           minWidth: 100,
           sortable: true,
-          filter: true,
+          filter: 'agMultiColumnFilter',
+          floatingFilter: true,
           resizable: true
         }}
       />

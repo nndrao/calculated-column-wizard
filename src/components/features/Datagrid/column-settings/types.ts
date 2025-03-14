@@ -1,40 +1,42 @@
 
-import { ColDef, HeaderClassParams } from 'ag-grid-community';
+import { ColDef } from 'ag-grid-community';
 
 export type BorderSide = 'top' | 'right' | 'bottom' | 'left';
 
-export interface StyleSettings {
+export type StyleSettings = {
+  color: string;
+  backgroundColor: string;
   fontWeight: 'normal' | 'bold';
   fontStyle: 'normal' | 'italic';
   textDecoration: 'none' | 'underline';
   textAlign: 'left' | 'center' | 'right';
-  backgroundColor: string;
-  color: string;
   border: {
-    [key in BorderSide]: {
+    [side in BorderSide]: {
       width: number;
       style: 'none' | 'solid' | 'dashed' | 'dotted';
       color: string;
     };
   };
-}
+};
 
-export interface ColumnSettings {
+export type ColumnSettings = {
   headerName: string;
   headerTooltip: string;
   cellTooltip: string;
   headerStyle: StyleSettings;
   cellStyle: StyleSettings;
-  valueFormatter: string;
+  valueFormatter: 'default' | 'number' | 'currency' | 'percentage' | 'date' | 'custom';
   customFormatter: string;
   editable: boolean;
   cellEditor: string;
   cellRenderer: string;
-  wrapHeaderText?: boolean;
-  autoHeaderHeight?: boolean;
-}
+  wrapHeaderText: boolean;
+  autoHeaderHeight: boolean;
+  floatingFilter?: boolean;
+  filterType?: string;
+};
 
 export interface ColumnSettingsTabProps {
   columnDefs: ColDef[];
-  onUpdateColumnDef?: (field: string, colDef: Partial<ColDef>) => void;
+  onUpdateColumnDef: (field: string, colDef: Partial<ColDef>) => void;
 }

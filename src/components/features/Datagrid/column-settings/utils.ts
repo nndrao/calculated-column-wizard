@@ -9,7 +9,9 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     tooltipField: settings.cellTooltip,
     editable: settings.editable,
     wrapHeaderText: settings.wrapHeaderText,
-    autoHeaderHeight: settings.autoHeaderHeight
+    autoHeaderHeight: settings.autoHeaderHeight,
+    filter: 'agMultiColumnFilter',
+    floatingFilter: true
   };
 
   // Create header style object that matches what AG Grid expects
@@ -26,14 +28,25 @@ export const buildColumnDef = (settings: ColumnSettings, field: string): Partial
     borderLeft: `${settings.headerStyle.border.left.width}px ${settings.headerStyle.border.left.style} ${settings.headerStyle.border.left.color}`
   };
 
-  // Apply header styles through both methods to ensure compatibility
+  // Apply header styles using inline style
   colDefUpdate.headerComponentParams = {
-    style: headerStyleObj
-  };
-  
-  // Add direct header style as a function to ensure it overrides default styles
-  colDefUpdate.headerClass = (params) => {
-    return 'custom-header-cell';
+    style: headerStyleObj,
+    template: 
+      `<div class="ag-header-cell-label" style="
+        color: ${settings.headerStyle.color}; 
+        background-color: ${settings.headerStyle.backgroundColor};
+        font-weight: ${settings.headerStyle.fontWeight};
+        font-style: ${settings.headerStyle.fontStyle};
+        text-decoration: ${settings.headerStyle.textDecoration};
+        text-align: ${settings.headerStyle.textAlign};
+      ">
+        <span ref="eText" class="ag-header-cell-text"></span>
+        <span ref="eSortOrder" class="ag-header-icon ag-sort-order"></span>
+        <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon"></span>
+        <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon"></span>
+        <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon"></span>
+        <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>
+      </div>`
   };
 
   // Add cell styling
